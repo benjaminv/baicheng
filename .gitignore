@@ -1,0 +1,17 @@
+data
+/temp
+/prince/cert
+/vender
+/images
+/mobile/images
+/mobile/data
+/mobile/headimg
+/mobile/bdimages
+/mobile/temp
+/mobile/wxjs/access_token.json
+/mobile/wxjs/jsapi_ticket.json
+/supplier/images
+/.idea
+/mobile/pay/alipay.config.php
+
+/logs

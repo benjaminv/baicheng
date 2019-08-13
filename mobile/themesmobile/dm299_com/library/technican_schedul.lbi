@@ -1,0 +1,116 @@
+<style>
+/*服务可预约时间弹出层*/
+.f_mask_schedul {background-color: #000;opacity: 0.4;height: 100%;width: 100%; position: absolute;top: 0;left: 0;z-index: 111;display: none;}
+#service_schedul{position:fixed; bottom:0; left:0; height:0px; z-index:99999999; background:#fff; width:100%;} 
+.goods_service_schedul { width:96%;overflow-y:scroll;margin-left:2%;background:#ffffff; height:100%; }
+.goods_service_schedul h2{ width:100%; text-align:center; height:30px; font-size:18px; line-height:30px; color:#333; font-weight:normal;  padding-top:30px}
+.goods_service_schedul ul{ width:100%; overflow:hidden; padding-top:10px; padding-bottom:50px;}
+.goods_service_schedul li{font-size:14px; width:20%; height:20px;float:left; overflow:hidden; border-bottom:1px solid #eeeeee; padding-top:5px; padding-bottom:5px;}
+.recent-days-container{height:100%; font-size:.75rem;overflow:hidden;color:#666;position:relative;padding:5px 5px} 
+.recent-days-container .ruler-cont .tit{ position:relative;width:100%; margin-bottom:.75rem } 
+.recent-days-container .ruler-cont .tit .label{ width:15%; position:absolute; top:0;left:.75rem; font-size:.6rem } 
+.recent-days-container .ruler-cont .tit .ruler{ width:100%; margin-bottom:.5rem;background:#fff; overflow:hidden } 
+.recent-days-container .ruler-cont .tit .ruler .ruler-number{ padding-bottom:1.2rem;position:relative; margin-left:15%; width:100% } 
+.recent-days-container .ruler-cont .tit .ruler .ruler-number span{ display:block; width:5%; height:1rem; position:relative;float:left } 
+.recent-days-container .ruler-cont .tit .ruler .ruler-number span i{ font-size:.6rem; font-style:normal; position:absolute; left:0; top:0;-webkit-transform:translateX(-50%); transform:translateX(-50%) }
+.recent-days-container .days-wrapper .day{ position:relative;width:100%; margin-bottom:.75rem } 
+.recent-days-container .days-wrapper .day .label{ width:15%; position:absolute; top:0; 	left:.75rem; font-size:.6rem } 
+.recent-days-container 	.days-wrapper .day .hours{ width:100% } 
+.recent-days-container 	.days-wrapper .day .hours .hour{ position:relative; overflow:hidden; margin-left:15%; margin-right:5% } 
+.recent-days-container .days-wrapper .day .hours .hour .hour0{ float:left; width:3.125%; height:.6rem; background-size:100% 100%; background-color:#969799; margin-top: .6rem; } 
+.recent-days-container .days-wrapper .day .hours .hour .hour1{float:left; width:3.125%; height:.6rem; background-size:100% 100%; background-color:#07c160; margin-top: .6rem; }
+.schenican-can{margin-left: 3px;background: #07c160;color: #fff;padding: 0px 4px;}
+.schenican-no-can{margin-left: 3px;background: #969799;color: #fff;padding: 0px 4px;}
+</style>
+
+{if $future_schedul_list}
+<div class="goods_can">
+ <dl>
+<dt onClick="show_technican_schedul()">可预约时间<span class="schenican-can">可预约</span><span class="schenican-no-can">不可预约</span></dt>
+</dl>
+</div>
+{/if}
+
+<!--技师行程弹出代码-->
+<section class="f_mask_schedul" style="display: none;"></section>
+<section class="f_block_schedul" id="service_schedul" style="height:0; overflow:hidden;">
+<section class="goods_service_schedul">
+<h2>可预约时间</h2>
+<ul>
+	<div class="recent-days-container">
+		<div class="ruler-cont">
+			<div class="tit">
+				<label class="label">时段</label>
+				<div class="ruler">
+					<div class="ruler-number">
+						<span><i>08</i></span>
+						<span><i>09</i></span>
+						<span><i>10</i></span>
+						<span><i>11</i></span>
+						<span><i>12</i></span>
+						<span><i>13</i></span>
+						<span><i>14</i></span>
+						<span><i>15</i></span>
+						<span><i>16</i></span>
+						<span><i>17</i></span>
+						<span><i>18</i></span>
+						<span><i>19</i></span>
+						<span><i>20</i></span>
+						<span><i>21</i></span>
+						<span><i>22</i></span>
+						<span><i>23</i></span>
+						<span><i>24</i></span>
+					</div>
+					<div  class="ruler-line"></div>
+				</div>
+			</div>
+		</div>
+		<div  class="days-wrapper">
+		
+			{foreach from=$future_schedul_list item=schedul key=key name="schedul"}
+			<div  class="day">
+				<label  class="label">
+					{if $smarty.foreach.schedul.index == 0}
+						今天
+					{elseif $smarty.foreach.schedul.index == 1}
+						明天
+					{elseif $smarty.foreach.schedul.index == 2}
+						后天
+					{else}
+						{$key}
+					{/if}
+				</label>
+				<div  class="hours">
+					<div class="hour">
+						{foreach from=$schedul item=schedul_class}
+						<div class="{$schedul_class}"></div>
+						{/foreach}
+					</div>
+				</div>
+			</div>
+			{/foreach}
+		</div>
+	</div>	
+</ul>
+</section>
+<div class="goods_shut">
+<a href="javascript:void(0)" onclick="close_service_schedul();" class="shut" style=" color:#FFF;font-size:18px;">关闭</a>
+</div>
+</section>
+
+<script>
+	function show_technican_schedul(){
+	
+		$("#service_schedul").animate({height:'80%'},[10000]);
+			var total=0,h=$(window).height(),
+		top =$('.goods_service_schedul').height()||0,
+		con = $('.xiangq');
+			total = 0.8*h;
+			con.height(total-top+'px');
+		$(".f_mask_schedul").show();
+	}
+	function close_service_schedul(){
+		$(".f_mask_schedul").hide();
+		$('#service_schedul').animate({height:'0'},[10000]);
+	}
+</script>

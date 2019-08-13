@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>申请记录 </title>
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" type="text/css" href="../themesmobile/dm299_com/css/public.css">
+<link rel="stylesheet" type="text/css" href="../themesmobile/dm299_com/css/user.css">
+<link href="../themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="../themesmobile/dm299_com/js/jquery.js"></script>
+<script type="text/javascript" src="../themesmobile/dm299_com/js/jquery.more.js"></script>
+<script type="text/javascript" src="../js/jquery.json.js"></script>
+<script type="text/javascript" src="../js/transport.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/utils.js"></script>
+<script type="text/javascript" src="../js/shopping_flow.js"></script>
+
+</head>
+<body class="body_bj">
+<div class="top" style="height: 40px;overflow: hidden;">
+    <dl>
+        <dt>
+          <a href="javascript:history.back(-1)" class="url"></a>
+        </dt>
+        <dd>申请记录</dd>
+    </dl>
+</div>
+<div id="tbh5v0" >
+    <h2 class="vc_title">账户余额：<strong>{$user_money}</strong></h2>
+    {foreach from=$account_log item=info}
+    <table style="background-color: #fff;width: 100%;margin-top: 20px;">
+      <tr>
+        <td>
+          <span>提现</span>
+          <span style="float: right;margin-right: 10px;">{$info.add_time}</span>
+        </td>
+      </tr>
+      <tr>
+        <td>金额：{$info.money}</td>
+      </tr>
+      <tr>
+        <td>提现方式：{if ($info.pay_typ==0)}微信{else}支付宝{/if}</td>
+      </tr>
+      {if $info.pay_typ==1}
+       <tr>
+         <td>
+           账号：{$info.pay_number}  姓名：{$info.pay_name}
+         </td>
+       </tr>
+      {/if}
+      {if $info.online_number}
+      <tr>
+        <td>流水账号：{$info.online_number}</td>
+      </tr>
+      {/if}
+      {if $info.err.msg}
+        <tr>
+          <td>
+            错误信息：{$info.err_msg}
+          </td>
+        </tr>
+      {/if}
+      <!-- <tr>
+        <td>提现时间：{$info.add_time}</td>
+      </tr>
+       <tr>
+        <td>付款时间：{$info.pay_name}</td>
+      </tr> -->
+      <tr>
+        <td>状态：{ $info.status}</td>
+      </tr>
+    </table>
+    {/foreach}
+    <div style="background-color: #F9F8FD;height: 38px;margin-top: 20px;">
+        <a href="application_log.php?page={$prev}" class="prev" style="margin:auto;float: left;width: 50%;">
+            <img src="../themesmobile/dm299_com/images/v-shop/arrow_left.png" style="width: 12px;height: 20px;margin-top: 6px;position: relative;left: 75%;">
+        </a>
+
+        <a href="{if $next > $totalpage}#{else}application_log.php?page={$next}{/if}" style="float:left;width: 50%;"><img src="../themesmobile/dm299_com/images/v-shop/arrow_right.png" style="width: 12px;height: 20px;margin-top: 6px;margin-left: 30px;margin-bottom: 10px;"></a>  
+    </div>
+</div>
+
+</body>
+</html>

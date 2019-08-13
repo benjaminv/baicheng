@@ -1,0 +1,75 @@
+<!-- $Id: account_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+
+<div class="main-div">
+<form method="post" action="supplier_cash_order.php" name="theForm">
+<table cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+    <td class="label">提现单号：</td>
+    <td>{$order.order_sn}</td>
+  </tr>
+  <tr>
+    <td class="label">申请提现的店铺：</td>
+    <td>{$order.supplier_name}</td>
+  </tr>
+  <tr>
+    <td class="label">申请时间：</td>
+    <td>{$order.add_time}</td>
+  </tr>
+  <tr>
+    <td class="label">要提现的金额：</td>
+    <td><em>{$order.money}</em>元</td>
+  </tr>
+  <tr>
+    <td class="label">收款方式：</td>
+    <td>{if $order.pay_typ==1}支付宝【账号：{$order.pay_number}姓名：{$order.pay_name}】{else}微信{/if}</td>
+  </tr>
+  <tr>
+    <td class="label">状态：</td>
+    <td>
+      <input type="radio" name="status" id="status_2" value="2"
+             {if $order.status eq 2} checked="true"{/if} {if $order.status eq 2 || $order.status eq 3} disabled="true"{/if}/>
+      <label for="status_2">审核通过并付款</label>
+      <input type="radio" name="status" id="status_3" value="3"
+             {if $order.status eq 3} checked="true" {/if} {if $order.status eq 2 || $order.status eq 3} disabled="true"{/if}/>
+      <label for="status_3">审核失败</label>
+    </td>
+  </tr>
+  <tr id="status_err_msg_box" {if $order.status!=3}style="display:none;"{/if}>
+    <td class="label">审核失败原因：</td>
+    <td>
+      <textarea name="err_msg" cols="55" rows="3"{if $order.status eq 2 || $order.status eq 3} readonly="true" {/if}>{$order.err_msg}</textarea>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <input type="submit" class="button" value="{$lang.button_submit}" />
+      <input type="hidden" name="act" value="auditpay" />
+      <input type="hidden" name="oid" value="{$order.id}" />
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+  $("input:radio[name='status']").change(function(){
+      if(this.value==3){
+          $("#status_err_msg_box").show();
+      }else{
+          $("#status_err_msg_box").hide();
+      }
+  });
+
+
+<!--
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

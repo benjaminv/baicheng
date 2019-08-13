@@ -1,0 +1,527 @@
+<!-- $Id: group_buy_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+{insert_scripts files="validator.js,../js/utils.js"}
+
+
+
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+
+
+
+<!-- 商品搜索 -->
+
+<div class="form-div">
+
+  <form action="javascript:searchGoods()" name="searchForm">
+
+    <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+
+    <!-- 分类 -->
+
+    <select name="cat_id"><option value="0">{$lang.all_cat}</caption>{$cat_list}</select>
+
+    <!-- 品牌 -->
+
+    <select name="brand_id"><option value="0">{$lang.all_brand}</caption>{html_options options=$brand_list}</select>
+
+   
+    <input type="text"  style="min-width: 150px;" placeholder="请输入商铺的名称"  class="get_shop_name" />
+    
+     <!-- 关键字 -->
+    <input type="text" name="keyword" size="20" />
+
+    <input type="submit" value="{$lang.button_search}" class="button" />
+
+  </form>
+
+</div>
+
+
+
+<form method="post" action="distrib_goods.php?act=insert_update" name="theForm" onsubmit="return validate()">
+
+<div class="main-div">
+
+<table id="group-table" cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+      <td class="label">店铺名称：</td>
+      <td>
+          <select name="shop_id" class="shop_id" >
+            {if $distrib_goods.supplier_id}
+             <option value="{$distrib_goods.supplier_id}">{$distrib_goods.supplier_name}</option>
+            {else}
+            <option value="0">请先搜索店铺,在此生成选项列表...</option>
+            {/if}
+          </select>
+      </td>
+  </tr>
+  <tr>
+      <td class="label">{$lang.label_goods_name}</td>
+      <td>
+            <select name="goods_id" class="goods_id">
+            {if $distrib_goods.id}
+            <option value="{$distrib_goods.goods_id}">{$distrib_goods.goods_name}</option>
+            {else}
+            <option value="0">{$lang.notice_goods_name}</option>
+            {/if}
+          </select>    
+      </td>
+  </tr>
+  <tr>
+  	<td class="label">分销类型：</td>
+    <td>
+        <input type="radio" name="distrib_time" value="0" {if $distrib_goods.distrib_time eq 0} checked="checked"{/if} onclick="display_time(this.value)"/>
+        永久分销
+        <input type="radio" name="distrib_time" value="1" {if $distrib_goods.distrib_time eq 1} checked="checked"{/if} onclick="display_time(this.value)"/>
+        定时分销
+    </td>
+  </tr>
+
+  <tr {if $distrib_goods.distrib_time eq 0} style="display:none"{else} style="display:table-row"{/if} id="st_time">
+
+    <td class="label">
+      {$lang.label_start_date}</td>
+
+    <td>
+
+      <input name="start_time" type="text" id="start_time" size="22" value='{$distrib_goods.start_time}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time', '%Y-%m-%d %H:%M', '24', false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>
+
+    </td>
+
+  </tr>
+
+  <tr {if $distrib_goods.distrib_time eq 0} style="display:none"{else} style="display:table-row"{/if} id="en_time">
+
+    <td class="label">{$lang.label_end_date}</td>
+
+    <td>
+
+      <input name="end_time" type="text" id="end_time" size="22" value='{$distrib_goods.end_time}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_time', '%Y-%m-%d %H:%M', '24', false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>
+
+    </td>
+
+  </tr>
+
+  <tr>
+  	<td class="label">分成类型：</td>
+    <td>
+    	<select name="distrib_type" onchange="change_type(this.value)">
+        	<option value="1" {if $distrib_goods.distrib_type eq 1} selected="selected"{/if}>分成金额</option>
+            <option value="2" {if $distrib_goods.distrib_type eq 2} selected="selected"{/if}>商品价格百分比</option>
+        </select>
+    </td>
+  </tr>
+
+  <tr>
+
+    <td class="label">&nbsp;</td>
+    <td><input name="distrib_money" type="text" id="distrib_money" value="{$distrib_goods.distrib_money|default:0}" size="10">
+    <span id="sign">{if $distrib_goods.distrib_type eq 2}%{else}元{/if}</span>
+    </td>
+
+  </tr>
+
+
+  <tr>
+    <td class="label">消费积分：</td>
+    <td>
+      <select name="distrib_sale_type" onchange="change_type1(this.value)">
+        <option value="1" {if $distrib_goods.distrib_sale_type eq 1} selected="selected"{/if}>分成积分</option>
+        <option value="2" {if $distrib_goods.distrib_sale_type eq 2} selected="selected"{/if}>商品价格百分比</option>
+      </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="label">&nbsp;</td>
+    <td><input name="distrib_sale_money" type="text" id="distrib_sale_money" value="{$distrib_goods.distrib_sale_money|default:0}" size="10">
+      <span id="sign1">{if $distrib_goods.distrib_sale_type eq 2}%{else}积分{/if}</span>
+    </td>
+
+  </tr>
+
+  <tr>
+    <td class="label">等级积分：</td>
+    <td>
+      <select name="distrib_level_type" onchange="change_type2(this.value)">
+        <option value="1" {if $distrib_goods.distrib_level_type eq 1} selected="selected"{/if}>分成积分</option>
+        <option value="2" {if $distrib_goods.distrib_level_type eq 2} selected="selected"{/if}>商品价格百分比</option>
+      </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="label">&nbsp;</td>
+    <td><input name="distrib_level_money" type="text" id="distrib_level_money" value="{$distrib_goods.distrib_level_money|default:0}" size="10">
+      <span id="sign2">{if $distrib_goods.distrib_level_type eq 2}%{else}积分{/if}</span>
+    </td>
+
+  </tr>
+
+
+
+  <tr>
+    <td class="label">店铺提成：</td>
+    <td>
+      <select name="distrib_supplier_type" onchange="change_type3(this.value)">
+        <option value="1" {if $distrib_goods.distrib_supplier_type eq 1} selected="selected"{/if}>分成金额</option>
+        <option value="2" {if $distrib_goods.distrib_supplier_type eq 2} selected="selected"{/if}>商品价格百分比</option>
+      </select>
+    </td>
+  </tr>
+
+  <tr>
+    <td class="label">&nbsp;</td>
+    <td><input name="distrib_supplier_money" type="text" id="distrib_supplier_money" value="{$distrib_goods.distrib_supplier_money|default:0}" size="10">
+      <span id="sign3">{if $distrib_goods.distrib_supplier_type eq 2}%{else}元{/if}</span>
+    </td>
+
+  </tr>
+
+
+
+  <tr>
+
+    <td class="label">&nbsp;</td>
+
+    <td>
+
+      <input name="id" type="hidden" id="id" value="{$distrib_goods.id}">
+
+      <input type="submit" name="submit" value="{$lang.button_submit}" class="button" />
+
+      <input type="reset" value="{$lang.button_reset}" class="button" />
+
+      </td>
+
+  </tr>
+
+</table>
+
+</div>
+
+</form>
+<div class="list-div" id="listDiv">
+
+
+  <table cellspacing='1' cellpadding='3'>
+    <tr>
+      <th name="levels" ReadOnly="true" width="10%">分销级别</th>
+      <th name="level_point" Type="TextBox">等级积分分成</th>
+      <th name="level_sale_point" Type="TextBox">消费积分分成</th>
+      <th name="level_money" Type="TextBox">现金分成</th>
+    </tr>
+    {foreach from=$config.item item=val name=nav}
+    <tr align="center">
+      <td>{$smarty.foreach.nav.iteration}</td>
+      <td>
+
+        <input  {if $val.level_point_type eq 0 or empty($val.level_point_type)}checked{/if} class="point_type level_point_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_point_type_{$smarty.foreach.nav.iteration}','edit_point','{$smarty.foreach.nav.iteration}')" type="radio" name="level_point_type_{$smarty.foreach.nav.iteration}" value="0"/>比例&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_point', '{$smarty.foreach.nav.iteration}','0',1,'{$distrib_goods.id}'); return false;">{if !empty($val.level_point)}{$val.level_point}{else}0%{/if}</span>
+
+        <input {if $val.level_point_type eq 1}checked{/if} class="point_type level_point_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_point_type_{$smarty.foreach.nav.iteration}','edit_point','{$smarty.foreach.nav.iteration}')" type="radio" name="level_point_type_{$smarty.foreach.nav.iteration}"  value="1"/>数值&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_point', '{$smarty.foreach.nav.iteration}','1',1,'{$distrib_goods.id}'); return false;">{if !empty($val.level_point_num)}{$val.level_point_num}{else}0{/if}</span>
+
+      </td>
+
+
+      <td>
+        <input {if ($val.level_sale_point_type eq 0 or empty($val.level_sale_point_type))}checked{/if} class="point_type level_sale_point_type_{$smarty.foreach.nav.iteration}" onclick="hide_box(this,'level_sale_point_type_{$smarty.foreach.nav.iteration}','edit_sale_point','{$smarty.foreach.nav.iteration}')" type="radio" name="level_sale_point_type_{$smarty.foreach.nav.iteration}" value="0"/>比例&nbsp&nbsp&nbsp&nbsp <span onclick="listTable.edit(this, 'edit_sale_point', '{$smarty.foreach.nav.iteration}','0',1,'{$distrib_goods.id}'); return false;">{if !empty($val.level_sale_point)}{$val.level_sale_point}{else}0%{/if}</span>
+
+        <input {if $val.level_sale_point_type eq 1 }checked{/if} class="point_type level_sale_point_type_{$smarty.foreach.nav.iteration}" type="radio" onclick="hide_box(this,'level_sale_point_type_{$smarty.foreach.nav.iteration}','edit_sale_point','{$smarty.foreach.nav.iteration}')" name="level_sale_point_type_{$smarty.foreach.nav.iteration}"  value="1"/>数值&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_sale_point', '{$smarty.foreach.nav.iteration}','1',1,'{$distrib_goods.id}'); return false;">{if !empty($val.level_sale_point_num)}{$val.level_sale_point_num}{else}0{/if}</span>
+      </td>
+
+
+
+      <td>
+        <input {if $val.level_money_type eq 0 or empty($val.level_money_type)}checked{/if}  class="point_type level_money_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_money_type_{$smarty.foreach.nav.iteration}','edit_money','{$smarty.foreach.nav.iteration}')" type="radio" name="level_money_type_{$smarty.foreach.nav.iteration}" value="0"/>比例&nbsp&nbsp&nbsp&nbsp <span onclick="listTable.edit(this, 'edit_money', '{$smarty.foreach.nav.iteration}','0',1,'{$distrib_goods.id}'); return false;">{if !empty($val.level_money)}{$val.level_money}{else}0%{/if}</span>
+
+        <input {if $val.level_money_type eq 1}checked{/if}  class="point_type level_money_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_money_type_{$smarty.foreach.nav.iteration}','edit_money','{$smarty.foreach.nav.iteration}')" type="radio" name="level_money_type_{$smarty.foreach.nav.iteration}"  value="1"/>数值&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_money', '{$smarty.foreach.nav.iteration}','1',1,'{$distrib_goods.id}'); return false;">{if !empty($val.level_money_num)}{$val.level_money_num}{else}0{/if}</span>
+
+      </td>
+    </tr>
+    {/foreach}
+  </table>
+</div>
+</div>
+<script>
+    function hide_box(obj,cls,edit,iteration){
+      $('.'+cls).next().css('display','none');
+      $(obj).next().css('display','inline-block');
+      var type=$(obj).val();
+      var next=$(obj).next();
+      listTable.edit(next[0], edit, iteration,type,1,'{$distrib_goods.id}')
+    }
+
+    /**
+     * 功能：获得店铺的名称
+     */
+      $('.get_shop_name').blur(function(){
+    
+        var shop_names = $(this).val();
+        if(shop_names){
+
+           Ajax.call('distrib_goods.php?is_ajax=1&act=search_shop_name&shop_name='+shop_names,shop_names, return_shop_namre, 'GET', 'JSON');
+        }
+        
+      });
+
+    function return_shop_namre(rel){
+       
+        $('.shop_id').empty();
+        $('.goods_id').empty();
+
+        if(rel){
+            var lens = rel.content.length;
+
+
+            for(var i =0;i<lens;i++){
+
+                $('.shop_id').append("<option value='"+rel.content[i]['supplier_id']+"'>"+rel.content[i]['supplier_name']+"</option>");
+            }
+        }
+        $('.goods_id').append("<option value='0'>请先搜索商品,在此生成选项列表...</option>")
+    }
+
+
+
+
+      /**
+
+ * 搜索商品
+
+ */
+
+function searchGoods(){
+
+  var filter = new Object;
+
+  filter.cat_id   = document.forms['searchForm'].elements['cat_id'].value;
+
+  filter.brand_id = document.forms['searchForm'].elements['brand_id'].value;
+
+  filter.keyword  = document.forms['searchForm'].elements['keyword'].value;
+
+  var shop_ids = $('.shop_id').val();
+
+  if(shop_ids){
+
+    filter.shop_id  = shop_ids;
+  }
+
+     Ajax.call('distrib_goods.php?is_ajax=1&act=search_goods', filter, searchGoodsResponse, 'GET', 'JSON');
+ 
+ 
+}
+
+
+
+
+
+    function searchGoodsResponse(result){
+
+   
+  if (result.error == '1' && result.message != '')
+
+  {
+
+    alert(result.message);
+
+    return;
+
+  }
+
+
+
+  var sel = document.forms['theForm'].elements['goods_id'];
+
+
+
+  sel.length = 0;
+
+
+
+  /* 创建 options */
+
+  var goods = result.content;
+
+  if (goods)
+
+  {
+
+    for (i = 0; i < goods.length; i++)
+
+    {
+
+      var opt = document.createElement("OPTION");
+
+      opt.value = goods[i].goods_id;
+
+      opt.text  = goods[i].goods_name;
+
+      sel.options.add(opt);
+
+    }
+
+  }
+
+  else
+
+  {
+
+    var opt = document.createElement("OPTION");
+
+    opt.value = 0;
+
+    opt.text  = search_is_null;
+
+    sel.options.add(opt);
+
+  }
+
+
+
+  return;
+
+}
+</script>
+<script language="JavaScript">
+
+<!--
+
+{literal}
+
+
+
+// 检查新订单
+
+startCheckOrder();
+
+
+function display_time(val)
+{
+	if(val == 0)
+	{
+		document.getElementById('st_time').style.display = 'none';
+		document.getElementById('en_time').style.display = 'none';
+	}
+	else
+	{
+		document.getElementById('st_time').style.display = 'table-row';
+		document.getElementById('en_time').style.display = 'table-row';
+	}
+}
+
+function change_type(val)
+{
+	if(val == 2)
+	{
+		document.getElementById('sign').innerHTML = '%';
+	}
+	else
+	{
+		document.getElementById('sign').innerHTML = '元';
+	}
+}
+
+function change_type3(val)
+{
+	if(val == 2)
+	{
+		document.getElementById('sign3').innerHTML = '%';
+	}
+	else
+	{
+		document.getElementById('sign3').innerHTML = '元';
+	}
+}
+function change_type1(val)
+{
+  if(val == 2)
+  {
+    document.getElementById('sign1').innerHTML = '%';
+  }
+  else
+  {
+    document.getElementById('sign1').innerHTML = '积分';
+  }
+}
+function change_type2(val)
+{
+  if(val == 2)
+  {
+    document.getElementById('sign2').innerHTML = '%';
+  }
+  else
+  {
+    document.getElementById('sign2').innerHTML = '积分';
+  }
+}
+/**
+
+ * 检查表单输入的数据
+
+ */
+
+function validate()
+
+{
+
+  validator = new Validator("theForm");
+
+  var eles = document.forms['theForm'].elements;
+ 
+  var shop_idss = $('.shop_id').val();
+
+  if(shop_idss < = 0 ){
+
+    alert('请选择店铺后再提交');
+
+    return false;
+  }
+
+  
+
+  var goods_id = eles['goods_id'].value;
+
+  if (goods_id <= 0)
+
+  {
+
+    validator.addErrorMsg(error_goods_null);
+
+  }
+
+  validator.isNumber('deposit', error_deposit, false);
+
+  validator.isInt('restrict_amount', error_restrict_amount, false);
+
+  validator.isInt('gift_integral', error_gift_integral, false);
+
+  return validator.passed();
+
+}
+
+
+
+
+
+
+
+
+
+
+//-->
+
+{/literal}
+
+
+
+
+</script>
+
+
+
+{include file="pagefooter.htm"}

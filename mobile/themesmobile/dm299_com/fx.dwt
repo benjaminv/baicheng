@@ -1,0 +1,250 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<title>订单分享</title>
+<!--v_shop.css-->
+<link href="themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+<style>
+	body{background-image:url(themesmobile/dm299_com/images/share/bg.png);background-size:100% 100%;-moz-background-size:100% 100%;}
+	.erwei1{float:left;width:98%;margin:1% 1%;overflow: hidden;}
+	.erwei1 .user_logo1{width: 90%;overflow: hidden;text-align: center;padding:10px 0px;margin: auto;}
+	.erwei1 .user_logo1 img{display: block;margin: auto;    width: 40px;    height: 40px;    border-radius: 50%;    background: none;}
+	.erwei-head{width: 100%;float:left;}
+	.erwei-nickname{width: 100%;float:left;color:#fff;}
+	.erweima-title{width: 100%;height: 40px;float: left;}
+	.erweima-title{width: 60%;margin: 0 20%;float: left;height: 40px;}
+	.erweima-box{width: 100%;float:left;margin: 5px 0px;}
+	.erweima-bottom{margin: 5px 0px 0px 0px;background:#fff;}
+	.up-btn{position: relative;bottom: 78px;left: 35px;color:#666;}
+	#btn-upload-qrcode{position: relative;width:130px; height:130px;margin:auto;display: block;}
+	.shaidan-content{width: 80%;margin: 0 10%;float: left;line-height: 20px;color: #fff;}
+	.shaidan-textarea{width: 80%;border: none;margin: 0% 10%;height: 100px;}
+	.erweima-box-ul{width:60%;float:left;margin:0 20%;}
+	.erweima-box-ul li{width:32%;margin: 0% 0.66%;float:left;text-align:center;}
+	.erweima-box-ul li img{width:100%;}
+	.erweima-bottom-l{width:28%;margin: 0% 0.66%;float:left;text-align:center;}
+	.erweima-bottom-c{width:40%;margin: 0% 0.66%;float:left;text-align:center;}
+	.erweima-bottom-r{width:28%;margin: 0% 0.66%;float:left;text-align:center;}
+	.erweima-bottom-l img,.erweima-bottom-c img,.erweima-bottom-r img{width:100%;}
+</style>
+</head>
+<body>
+<!--main-->
+<div class="erwei1">
+	<div class="user_logo1">
+		<div class="erwei-head">
+		{if $user_info.headimgurl}
+			<img src="{$user_info.headimgurl}" alt="头像"/>
+		{else}
+			<img src="themesmobile/dm299_com/images/v-shop/userportrait.jpg" alt="头像"/>
+		{/if}
+		</div>
+		<div class="erwei-nickname">{$user_info.nickname}</div>
+	</div>
+	<div class="erweima-title">
+		<img style="width:100%;" src="themesmobile/dm299_com/images/share/title.png" alt="变美只要一小时">
+	</div>
+	
+	<div class="erweima-box">
+		<a href="javascript:;" id="btn-upload-qrcode" data-typ="qrcode" onFocus="this.blur();">
+			<img {if $shaidan_img}src="{$shaidan_img}"{else} style="background:#fff;"{/if} width="100%" height="100%">
+			{if $order.user_id==$user_id&&!$shaidan_img}
+				<span class="up-btn">上传图片</span>
+			{/if}
+		</a>
+	</div>
+	<div class="erweima-box">
+		{if $shaidan_content}
+			<div class="shaidan-content">
+				{$shaidan_content}
+			</div>
+			{$shaidan_content}
+		{else}
+			<textarea id="shaidan_content" class="shaidan-textarea" placeholder="请输入晒单评价内容"></textarea>
+		{/if}
+	</div>
+	<div  class="erweima-box">
+		<ul class="erweima-box-ul">
+			<li><img src="themesmobile/dm299_com/images/share/mei.png"></li>
+			<li><img src="themesmobile/dm299_com/images/share/yan.png"></li>
+			<li><img src="themesmobile/dm299_com/images/share/chun.png"></li>
+		</ul>
+	</div>
+	<div class="erweima-box erweima-bottom">
+		<div class="erweima-bottom-l">
+			<div style="padding:10%;width:80%;float:left;">
+				<img src="{$erweima.code}" />
+			</div>
+		</div>
+		<div class="erweima-bottom-c">
+			<div style="padding: 15% 0% 10%;width: 100%;float: left;">
+				<span>长按识别二维码</span>
+				<span  class="search_text" id="search_text" onClick="choose_attr()"><img style="width:100%;" src="themesmobile/dm299_com/images/share/share.png"></span>
+			</div>
+		</div>
+		
+		<div class="erweima-bottom-r">
+			<div style="padding:10%;width:80%;float:left;">
+				<img style="width:100%;" src="themesmobile/dm299_com/images/share/logo.png">
+			</div>
+		</div>
+	</div>
+</div>
+
+<!--弹出层-->
+<section class="f_mask" style="display: none;"></section>
+<section class="f_block" id="choose_attr" style="height:0; overflow:hidden;">
+<div class="erweimaimg">
+	<span onclick="close_choose_attr();"><img src="themesmobile/dm299_com/images/v-shop/tishi.png" /></span>
+</div>
+</section>
+
+<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+
+
+<script>
+	var fx_pic="{$shaidan_img}";
+	var fx_content="{$shaidan_content}";
+	function choose_attr(){
+	    {if $order.user_id==$user_id&&!$shaidan_img}
+		if(fx_pic==""){
+			alert("请您先上传图片，然后再来分享");
+			$("#btn-upload-qrcode").click();
+			return false;
+		}
+		if(fx_content==""){
+			alert("请您先填写分享内容，然后再来分享");
+			$("#shaidan_content").focus();
+			return false;
+		}
+	    {/if}
+		document.body.style.overflow='hidden';
+		$("#choose_attr").animate({height:'100%'},[10000]);
+			var total=0,h=$(window).height(),
+		top =$('.f_title_attr').height()||0,
+			bottom =$('#choose_attr .erweimaimg').height()||0,
+		con = $('.goods_shut');
+			total = 0.8*h;
+			con.height(total-top-bottom+'px');
+		$(".f_mask").show();
+	}
+	function close_choose_attr(){	
+		document.body.style.overflow='';
+		$(".f_mask").hide();	
+		$('#choose_attr').animate({height:'0'},[10000]);
+	}
+	$('#shaidan_content').on('change',function(){
+		fx_content = $(this).val();
+	});
+</script>
+{if $signPackage}
+
+<script language="javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
+<script language="javascript">
+
+var fx_serverId="";
+function uploadwxpic(){
+{if $order.user_id==$user_id&&!$shaidan_img}
+  $.ajax({
+    url:"fx.php?act=wxupload&oid={$order.order_id}&is_ajax=1",
+    data:"serverId="+fx_serverId,
+    dataType:"json",
+    success: function(data){
+      if(data.errno){alert(data.msg);}
+      if(data.gotono){location.href=data.gotourl};
+      return false;
+    }
+  });
+  {/if}
+}
+  wx.config({
+    debug: false,
+    appId: '{$signPackage.appId}',
+    timestamp: '{$signPackage.timestamp}',
+    nonceStr: '{$signPackage.nonceStr}',
+    signature: '{$signPackage.signature}',
+    jsApiList: [
+    'onMenuShareTimeline',
+    'onMenuShareAppMessage',
+      'chooseImage',
+      'previewImage',
+      'uploadImage',
+      'getLocalImgData'
+    ]
+  });
+  wx.ready(function(){
+
+    wx.onMenuShareAppMessage({
+        title:"我参与百城大计美妆行动，加入我吧！",//分享标题
+        desc: "我参与百城大计美妆行动，加入我吧！",
+        link: window.location.href,
+        imgUrl: fx_pic,
+        success: function () {
+           //alert("fx_pic="+fx_pic);
+           uploadwxpic();
+        },
+        cancel:function(){
+            //alert("没有分享");
+        }
+    });
+    wx.onMenuShareTimeline({
+        title:"我参与百城大计美妆行动，加入我吧！",//分享标题
+        desc: "我参与百城大计美妆行动，加入我吧！",
+        link: window.location.href,
+        imgUrl:fx_pic,
+        success: function () {
+            //alert("fx_pic="+fx_pic);
+            uploadwxpic();
+        }
+    });
+
+{if $order.user_id==$user_id&&!$shaidan_img}
+    $("#btn-upload-qrcode").on("click",function(){
+      var that=$(this);
+      wx.chooseImage({
+        count:1,
+        success: function (res) {
+          wx_upload(that,res.localIds);
+        }
+      });
+    });
+    function wx_upload(that,localIds){
+      wx.uploadImage({
+        localId:localIds.toString(),
+        isShowProgressTips:1,
+        success: function (res) {
+            fx_pic=localIds[0];
+             fx_serverId=res.serverId.toString();
+            //上传成功后返回成功的图片地址，完整地址
+              $.ajax({
+                url:"fx.php?act=upload&oid={$order.order_id}&is_ajax=1",
+                data:"serverId="+fx_serverId,
+                dataType:"json",
+                success: function(data){
+                  if(data.errno){alert(data.msg);}
+                  if(data.ok){
+                        fx_pic=data.path_img;
+                        $("#"+that.attr("id")+">img").attr("src",fx_pic);
+                        alert("图片已上传成功！");
+                  }
+                  return false;
+                }
+              });
+          //uploadwxpic(that.attr("id"),that.data("typ"),res.serverId.toString());
+        },
+        fail: function (res) {
+        }
+      });
+    }
+    {/if}
+  })
+</script>
+
+{/if}
+
+<!-----底部悬浮菜单---->
+
+</body>
+</html>

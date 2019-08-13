@@ -1,0 +1,67 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/public.css"/>
+<link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/user.css"/>
+<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+<body>
+  <!-- #BeginLibraryItem "/library/global_nav.lbi" --><!-- #EndLibraryItem -->
+
+<header>
+  <div class="tab_nav">
+    <div class="header">
+      <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+      <div class="h-mid">修改评价</div>
+      <div class="h-right">
+        <aside class="top_bar">
+          <div onClick="show_menu();$('#close_btn').addClass('hid');" id="show_more"><a href="javascript:;"></a> </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+</header>
+<!-- #BeginLibraryItem "/library/up_menu.lbi" --><!-- #EndLibraryItem --> <!--弹出菜单-->
+<div class="bodybj">
+  <form  method="post" action="user.php?act=comment_edit_save" onsubmit="return validate_comment()">
+    <input type="hidden" value="{$comment.comment_id}" name="comment_id">
+    <!--商品-->
+    <div class="shai_goods">
+      <dl>
+        <dt><img src="{$goods.goods_thumb}" width="50"/></dt>
+        <dd>
+          <p>{$goods.goods_name|truncate:35}</p>
+          <span>{$goods.supplier_name}</span> </dd>
+      </dl>
+    </div>
+    <!--评分-->
+    <div class="pingfen">
+      <h2>修改评价内容:</h2>
+      <span>
+      <textarea id="content_13" class="inputBorder"  name="content">{$comment.content}</textarea>
+      </span> </div>
+    <!--按钮-->
+    <div class="p_main">
+      <input name="" type="submit" value="提交" class="m_pingjia" />
+</div>
+  </form>
+</div>
+</body>
+<script>
+ function validate_comment(){
+var content = $("#content_13").val();
+var error = [];
+ if(content.trim() == ''){
+    error.push('评价内容不能为空！');
+}
+
+if(error.length>0){
+alert(error);
+   return false;
+}else{
+  return true;
+}
+}
+</script>
+</html>

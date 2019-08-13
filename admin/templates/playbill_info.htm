@@ -1,0 +1,504 @@
+<!-- $Id: user_info.htm 16854 2009-12-07 06:20:09Z sxc_shop $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="../js/transport.org.js,../js/region.js"}
+<link rel="stylesheet" href="/admin/css/min.css">
+<link rel="stylesheet" href="/admin/css/table.css">
+
+<div class="">
+<!-- #代码增加2014-12-23 by www.68ecshop.com  _star -->
+<form method="post" action="playbill_list.php" name="theForm" id="theForm"  enctype="multipart/form-data">
+<!-- #代码增加2014-12-23 by www.68ecshop.com  _end -->
+  <ul class="adForm">
+    <li>
+      <span class="adFormWen fl">海报名称：</span>
+      <div class="fl">
+        <div class="adFormNums fl">
+          <input type="text" placeholder="" class="adFormNum" name="template_name"  style="width:400px;" id="template_name" value="{$playbill.template_name}"/>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+    <li>
+      <span class="adFormWen fl">海报备注：</span>
+      <div class="fl">
+        <div class="adFormNums fl">
+          <input type="text" placeholder="" class="adFormNum" name="template_remarks" style="width:400px;" id="template_remarks" value="{$playbill.template_remarks}"/>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+
+	<li>
+      <span class="adFormWen fl">海报类别：</span>
+      <select name="poster_type" id="poster_type" class="adFormSlt" style="height:31px;margin-top:0px;width:300px;">
+        <option value="0" {if $playbill.poster_type eq 0}selected{/if}>个人推广</option>
+        <option value="1" {if $playbill.poster_type eq 1}selected{/if}>商品推广</option>
+        <option value="2" {if $playbill.poster_type eq 2}selected{/if}>拼团推广</option>
+        <option value="3" {if $playbill.poster_type eq 3}selected{/if}>砍价推广</option>
+        <option value="4" {if $playbill.poster_type eq 4}selected{/if}>其他推广</option>
+      </select>
+      <div class="clearfix"></div>
+    </li>
+
+    <li>
+      <span class="adFormWen fl">组合方式：</span>
+      <select name="template_type" id="template_type" class="adFormSlt" style="height:31px;margin-top:0px;width:300px;">
+        <option value="0" {if $playbill.template_type eq 0}selected{/if} >请选择</option>
+        <option value="1" {if $playbill.template_type eq 1}selected{/if}>二维码+海报底板</option>
+        <option value="2" {if $playbill.template_type eq 2}selected{/if}>二维码+海报底板+用户头像</option>
+        <option value="3" {if $playbill.template_type eq 3}selected{/if}>二维码+海报底板+用户头像+昵称</option>
+        <option value="4" {if $playbill.template_type eq 4}selected{/if}>其他自定义</option>
+      </select>
+      <div class="clearfix"></div>
+    </li>
+    <li>
+      <span class="adFormWen fl">海报底板：</span>
+      <div class="fl">
+        <div class="adFormNums fl">
+          <input type="number" placeholder="" name="background_w" id="background_w" class="adFormNum" value="{$playbill.background_w}" style="width:80px;">×
+          <input type="number" placeholder="" name="background_h" id="background_h" class="adFormNum" value="{$playbill.background_h}" style="width:80px;">
+        </div>
+        <div class="adFormFile fl">
+          <input type="file" name="background" class="adFormFile_1" accept=".jpg" id="background" onchange="file_change(this)">
+          <a href="#none" class="adFormFile_2">选择海报</a>
+          <input type="hidden" name="background_img" value="{$playbill.background}" id="background_img">
+        </div>
+        <span class="adFormS fl"><span style="color:red;" class="img_span">{if $playbill.background}已上传{/if}</span>&nbsp&nbsp&nbsp 宽×高，jpg格式。</span>
+        <div class="clearfix"></div>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+    <li>
+      <span class="adFormWen fl">显示用户头像：</span>
+      <div class="fl">
+        <div class="adFormBox">
+          <label class="adFormRdo"><input type="radio" name="headimg_status" value="0" {if $playbill.headimg_status neq 1}checked{/if}>否</label>
+          <label class="adFormRdo"><input type="radio" name="headimg_status" value="1" {if $playbill.headimg_status eq 1}checked{/if}>是</label>
+        </div>
+        <div class="adFormBox">
+          <input type="number" placeholder="" name="headimg_w" id="headimg_w" class="adFormNum" value="{$playbill.headimg_w}" style="width:80px;">×
+          <input type="number" placeholder="" name="headimg_h" id="headimg_h" class="adFormNum" value="{$playbill.headimg_h}" style="width:80px;">
+          <span class="adFormS">宽×高，示例头像尺寸为90*90</span>
+        </div>
+        <div class="adFormBox">
+          <div class="adFormPx fl">
+            离左侧距离<input type="number" name="headimg_x" id="headimg_x" value="{$playbill.headimg_x}">px
+          </div>
+          <div class="adFormPx fl">
+            离顶部距离<input type="number" name="headimg_y" id="headimg_y" value="{$playbill.headimg_y}">px
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+    <li>
+      <span class="adFormWen fl">显示用户昵称：</span>
+      <div class="fl">
+        <div class="adFormBox">
+          <label class="adFormRdo"><input type="radio" name="user_name_status" value="0" {if $playbill.user_name_status neq 1}checked{/if}>否</label>
+          <label class="adFormRdo"><input type="radio" name="user_name_status" value="1" {if $playbill.user_name_status eq 1}checked{/if}>是</label>
+        </div>
+        <div class="adFormBox">
+          <div class="adFormPx fl">
+            离左侧距离<input type="number" name="user_name_x" id="user_name_x" value="{$playbill.user_name_x}">px
+          </div>
+          <div class="adFormPx fl">
+            离顶部距离<input type="number" name="user_name_y" id="user_name_y" value="{$playbill.user_name_y}">px
+          </div>
+          <div class="adFormPx fl">
+            字体大小<input type="number" name="user_name_font" id="user_name_font" value="{$playbill.user_name_font}">px
+          </div>
+          <div class="adFormPx fl">
+            字体颜色<input type="text" name="user_name_color" id="user_name_color" value="{$playbill.user_name_color}">
+          </div>
+          <div class="clearfix"></div>
+        </div>
+        <div class="adFormBox">
+          <span class="adFormS">仅限“显示用户昵称”为“是”时，需要填写此栏，其中颜色采用十六进制，示例：#2F4F4F。</span>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+    <li>
+      <span class="adFormWen fl">显示二维码：</span>
+      <div class="fl">
+        <div class="adFormBox">
+          <input type="number" placeholder="" class="adFormNum" name="erweima_w" id="erweima_w" value="{$playbill.erweima_w}" style="width:80px;">×
+          <input type="number" placeholder="" class="adFormNum" name="erweima_h" id="erweima_h" value="{$playbill.erweima_h}" style="width:80px;">
+          <span class="adFormS">宽×高，示例二维码尺寸为140*140</span>
+        </div>
+        <div class="adFormBox">
+          <div class="adFormPx fl">
+            离左侧距离<input type="number" name="erweima_x" id="erweima_x" value="{$playbill.erweima_x}">px
+          </div>
+          <div class="adFormPx fl">
+            离顶部距离<input type="number" name="erweima_y" id="erweima_y" value="{$playbill.erweima_y}">px
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="clearfix"></div>
+    </li>
+    <li class="text_li">
+      {if $bill_text}
+      {foreach from=$bill_text item=text}
+      <div class="adForms text_li_div">
+        <span class="adFormWen adFormWens fl">文本{$text.key}：</span>
+        <div class="fl">
+          <div class="adFormBox">
+            <div class="adFormPx fl">
+              离左侧距离<input type="number" name="cfg_value[text_x][]" value="{$text.text_x}">px
+            </div>
+            <div class="adFormPx fl">
+              离顶部距离<input type="number" name="cfg_value[text_y][]" value="{$text.text_y}">px
+            </div>
+            <div class="adFormPx fl">
+              字体大小<input type="number" name="cfg_value[text_font][]" value="{$text.text_font}">px
+            </div>
+            <div class="adFormPx fl">
+              字体颜色<input type="text" name="cfg_value[text_color][]" value="{$text.text_color}">
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="adFormBox">
+            <div class="adFormL fl">
+              <input type="text" class="adFormL_1" name="cfg_value[text][]" value="{$text.text}">
+              <span class="adFormS">自定义文本，颜色采用十六进制，示例：#2F4F4F。</span>
+            </div>
+            {if $text.key neq 0}
+            <a href="javascript:;" class="adFormR fr" onclick="delprize(this)">-删除一栏</a>
+            {else}
+            <a href="javascript:;" class="adFormR fr" onclick="addprize(this)">+增加一栏</a>
+            {/if}
+
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      {/foreach}
+      {else}
+      <div class="adForms text_li_div">
+        <span class="adFormWen adFormWens fl">文本：</span>
+        <div class="fl">
+          <div class="adFormBox">
+            <div class="adFormPx fl">
+              离左侧距离<input type="number" name="cfg_value[text_x][]">px
+            </div>
+            <div class="adFormPx fl">
+              离顶部距离<input type="number" name="cfg_value[text_y][]">px
+            </div>
+            <div class="adFormPx fl">
+              字体大小<input type="number" name="cfg_value[text_font][]">px
+            </div>
+            <div class="adFormPx fl">
+              字体颜色<input type="text" name="cfg_value[text_color][]">
+            </div>
+            <div class="clearfix"></div>
+          </div>
+          <div class="adFormBox">
+            <div class="adFormL fl">
+              <input type="text" class="adFormL_1" name="cfg_value[text][]">
+              <span class="adFormS">自定义文本，颜色采用十六进制，示例：#2F4F4F。</span>
+            </div>
+            <a href="javascript:;" class="adFormR fr" onclick="addprize(this)">+增加一栏</a>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      {/if}
+    </li>
+    <li class="img_li">
+      {if $bill_img}
+      {foreach from=$bill_img item=text}
+      <div class="adForms img_li_div">
+        <span class="adFormWen adFormWens fl">图片{$text.key}：</span>
+        <div class="adFormWidth fl">
+          <div class="adFormL fl">
+            <div class="adFormBox">
+              <div class="adFormNums fl">
+                <input type="number" placeholder="" class="adFormNum"  name="img_value[img_w][]" value="{$text.img_w}">×
+                <input type="number" placeholder="" class="adFormNum" name="img_value[img_h][]" value="{$text.img_h}">
+              </div>
+              <div class="adFormFile fl">
+                <input type="file" name="img[]" class="adFormFile_1" accept=".jpg" onchange="file_change(this)">
+                <input type="hidden" name="img_value[img_old][]" class="adFormFile_1 adFormFile_3" value="{$text.img}">
+                <a href="#none" class="adFormFile_2">选择图片</a>
+              </div>
+              <span class="adFormS fl"><span style="color:red;" class="img_span">{if $text.img}已上传{/if}</span>&nbsp&nbsp&nbsp宽×高，示例图片尺寸为140*140，jpg格式</span>
+              <div class="clearfix"></div>
+            </div>
+            <div class="adFormBox">
+              <div class="adFormPx fl">
+                离左侧距离<input type="number" name="img_value[img_x][]" value="{$text.img_x}">px
+              </div>
+              <div class="adFormPx fl">
+                离顶部距离<input type="number" name="img_value[img_y][]" value="{$text.img_y}">px
+              </div>
+              <div class="clearfix"></div>
+            </div>
+
+			<div class="adFormBox">
+              <div class="adFormPx fl">
+                变量<input type="text" name="img_value[alias][]" value="{$text.alias}" style="width:120px;">
+				 <span class="adFormS fl"><span style="color:red;" class="img_span">支持变量{{goods_img}}商品图片,{{supplier_logo}}店铺logo</span>
+              </div>
+            </div>
+          </div>
+          {if $text.key neq 0}
+          <a href="javascript:;" class="adFormR fr" onclick="delimgprize(this)">-删除一栏</a>
+          {else}
+          <a href="javascript:;" class="adFormR fr" onclick="addimgprize(this)">+增加一栏</a>
+          {/if}
+          <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      {/foreach}
+      {else}
+      <div class="adForms img_li_div">
+        <span class="adFormWen adFormWens fl">图片：</span>
+        <div class="adFormWidth fl">
+          <div class="adFormL fl">
+            <div class="adFormBox">
+              <div class="adFormNums fl">
+                <input type="number" placeholder="" class="adFormNum"  name="img_value[img_w][]">×
+                <input type="number" placeholder="" class="adFormNum" name="img_value[img_h][]">
+              </div>
+              <div class="adFormFile fl">
+                <input type="file" name="img[]" class="adFormFile_1 adFormFile_3" accept=".jpg" onchange="file_change(this)">
+                <input type="hidden" name="img_value[img_old][]" class="adFormFile_1">
+                <a href="#none" class="adFormFile_2">选择图片</a>
+              </div>
+              <span class="adFormS fl"><span style="color:red;" class="img_span"></span>&nbsp&nbsp&nbsp宽×高，示例图片尺寸为140*140，jpg格式</span>
+              <div class="clearfix"></div>
+            </div>
+            <div class="adFormBox">
+              <div class="adFormPx fl">
+                离左侧距离<input type="number" name="img_value[img_x][]">px
+              </div>
+              <div class="adFormPx fl">
+                离顶部距离<input type="number" name="img_value[img_y][]">px
+              </div>
+              <div class="clearfix"></div>
+            </div>
+			<div class="adFormBox">
+              <div class="adFormPx fl">
+                变量<input type="text" name="img_value[alias][]" value="" style="width:120px;">
+				 <span class="adFormS fl"><span style="color:red;" class="img_span">支持变量{{goods_img}}商品图片,{{supplier_logo}}店铺logo</span>
+              </div>
+            </div>
+          </div>
+          <a href="javascript:;" class="adFormR fr" onclick="addimgprize(this)">+增加一栏</a>
+          <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+      {/if}
+    </li>
+    <li>
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="id" value="{$playbill.id}" />
+      <a href="javascript:;" class="adFormBtn fr" onclick="validate()">确定</a>
+      <!--<a href="playbill_list.php?act=showbill" class="adFormBtn fr">海报预览</a>-->
+      <a href="playbill_list.php?act=list" class="adFormBtn fr">取消</a>
+      <div class="clearfix"></div>
+    </li>
+  </ul>
+</form>
+</div>
+<script>
+    //添加奖项
+    var num = $('.text_li_div').length > 0 ? $('.text_li_div').length : 1;
+    function addprize(obj){
+        var html = '<div class="adForms text_li_div"> <span class="adFormWen adFormWens fl">文本'+num+'：</span> <div class="fl"> <div class="adFormBox"> <div class="adFormPx fl"> 离左侧距离<input type="number" name="cfg_value[text_x][]">px </div> <div class="adFormPx fl">离顶部距离<input type="number" name="cfg_value[text_y][]">px </div> <div class="adFormPx fl"> 字体大小<input type="number" name="cfg_value[text_font][]">px </div> <div class="adFormPx fl">字体颜色<input type="text" name="cfg_value[text_color][]"> </div> <div class="clearfix"></div> </div> <div class="adFormBox"> <div class="adFormL fl"> <input type="text" class="adFormL_1" name="cfg_value[text][]"> <span class="adFormS">自定义文本，颜色采用十六进制，示例：#2F4F4F。</span> </div> <a href="javascript:;" class="adFormR fr" onclick="delprize(this)">-删除一栏</a> <div class="clearfix"></div> </div> </div> <div class="clearfix"></div> </div>';
+        if(num <= 10){
+            $(".text_li").append(html);
+        }else{
+            alert("添加的文本项不能超过10行");
+            return false;
+        }
+        num++;
+    }
+    //删除奖项
+    function delprize(obj){
+        $(obj).parent().parent().parent().remove();
+        num--;
+    }
+
+	
+
+    var imgnum = $('.img_li_div').length > 0 ? $('.img_li_div').length : 1;
+    function addimgprize(obj){
+        var html = '<div class="adForms img_li_div"> <span class="adFormWen adFormWens fl">图片'+imgnum+'：</span> <div class="adFormWidth fl"> <div class="adFormL fl"> <div class="adFormBox"> <div class="adFormNums fl"> <input type="number" placeholder="" class="adFormNum"  name="img_value[img_w][]">×<input type="number" placeholder="" class="adFormNum" name="img_value[img_h][]"> </div> <div class="adFormFile fl"> <input type="file" name="img[]" class="adFormFile_1 adFormFile_3" accept=".jpg" onchange="file_change(this)"><input type="hidden" name="img_value[img_old][]" class="adFormFile_1"> <a href="#none" class="adFormFile_2">选择图片</a> </div> <span class="adFormS fl"><span style="color:red;" class="img_span" ></span>&nbsp&nbsp&nbsp宽×高，示例图片尺寸为140*140，jpg格式</span> <div class="clearfix"></div> </div> <div class="adFormBox"> <div class="adFormPx fl"> 离左侧距离<input type="number" name="img_value[img_x][]">px </div> <div class="adFormPx fl"> 离顶部距离<input type="number" name="img_value[img_y][]">px </div> <div class="clearfix"></div> </div> <div class="adFormBox"><div class="adFormPx fl">变量<input type="text" name="img_value[alias][]" value="" style="width:120px;"><span class="adFormS fl"><span style="color:red;" class="img_span">支持变量{{goods_img}}商品图片,{{supplier_logo}}店铺logo</span></div></div>  </div> <a href="javascript:;" class="adFormR fr" onclick="delimgprize(this)">-删除一栏</a> <div class="clearfix"></div> </div> <div class="clearfix"></div> </div>';
+        if(imgnum <= 10){
+            $(".img_li").append(html);
+        }else{
+            alert("添加的图片项不能超过10行");
+            return false;
+        }
+        imgnum++;
+    }
+    //删除奖项
+    function delimgprize(obj){
+        $(obj).parent().parent().remove();
+        imgnum--;
+    }
+</script>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    var template_name = $("#template_name").val();  //模板名称
+    var template_remarks = $("#template_remarks").val();  //模板备注
+    var template_type = $("#template_type option:selected").val();  //模板组合方式
+    var background_w = $("#background_w").val();  //海报宽度
+    var background_h = $("#background_h").val();  //海报高度
+    var headimg_status = $("input[name='headimg_status']:checked").val();  //是否显示头像
+
+    var headimg_w = $("#headimg_w").val(); //头像宽度
+    var headimg_h = $("#headimg_h").val(); //头像高度
+    var headimg_x = $("#headimg_x").val(); //头像离左侧距离
+    var headimg_y = $("#headimg_y").val(); //头像离顶部距离
+
+    var user_name_status = $("input[name='user_name_status']:checked").val();  //是否显示用户昵称
+
+    var user_name_x = $("#user_name_x").val(); //用户昵称离左侧距离
+    var user_name_y = $("#user_name_y").val(); //用户昵称离顶部距离
+    var user_name_font = $("#user_name_font").val(); //用户昵称字体
+    var user_name_color = $("#user_name_color").val(); //用户昵称颜色
+
+    var erweima_w = $("#erweima_w").val(); //二维码宽度
+    var erweima_h = $("#erweima_h").val(); //二维码高度
+    var erweima_x = $("#erweima_x").val(); //二维码离左侧距离
+    var erweima_y = $("#erweima_y").val(); //二维码离顶部距离
+
+    var background_img = $("#background_img").val(); //二维码离顶部距离
+
+    var fileInput = $('#background').get(0).files[0];
+    console.info(fileInput);
+    if(fileInput){
+       ;
+    }else{
+        if(background_img=='')
+        {
+            alert("请选择上传海报文件！");
+            return false;
+        }
+    }
+
+
+    if(template_name=='')
+    {
+        alert("请填写模板名称!");
+        return false;
+    }
+    if(template_remarks=='')
+    {
+        alert("请填写模板备注!");
+        return false;
+    }
+    if(template_type==''||template_type==0)
+    {
+        alert("请填写模板组合方式!");
+        return false;
+    }
+    if(background_w==''||background_w==0)
+    {
+        alert("请填写海报宽度，宽度需大于0!");
+        return false;
+    }
+    if(background_h==''||background_h==0)
+    {
+        alert("请填写海报高度，高度需大于0!");
+        return false;
+    }
+    if(headimg_status==1)
+    {
+        if(headimg_w==''||headimg_w==0)
+        {
+            alert("请填写头像宽度，宽度需大于0!");
+            return false;
+        }
+        if(headimg_h==''||headimg_h==0)
+        {
+            alert("请填写头像高度，高度需大于0!");
+            return false;
+        }
+        if(headimg_x=='')
+        {
+            alert("请填写头像离左侧距离!");
+            return false;
+        }
+        if(headimg_y=='')
+        {
+            alert("请填写头像离顶部距离!");
+            return false;
+        }
+    }
+    if(user_name_status==1)
+    {
+        if(user_name_x=='')
+        {
+            alert("请填写用户昵称离左侧距离!");
+            return false;
+        }
+        if(user_name_y=='')
+        {
+            alert("请填写用户昵称离顶部距离!");
+            return false;
+        }
+        if(user_name_font==''||user_name_font==0)
+        {
+            alert("请填写用户昵称字体!");
+            return false;
+        }
+        if(user_name_color=='')
+        {
+            alert("请填写用户昵称颜色!");
+            return false;
+        }
+    }
+
+    if(erweima_w==''||erweima_w==0)
+    {
+        alert("请填写二维码宽度，二维码宽度需大于0!");
+        return false;
+    }
+    if(erweima_h==''||erweima_h==0)
+    {
+        alert("请填写二维码高度，二维码高度需大于0!");
+        return false;
+    }
+    if(erweima_x=='')
+    {
+        alert("请填写二维码离左侧距离!");
+        return false;
+    }
+    if(erweima_y=='')
+    {
+        alert("请填写二维码离顶部距离!");
+        return false;
+    }
+    $("#theForm").submit();
+}
+function file_change(obj)
+{
+    $(obj).parent().parent().find(".img_span").text("已选择");
+}
+
+
+
+
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

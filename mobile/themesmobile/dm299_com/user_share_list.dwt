@@ -1,0 +1,143 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>{$page_title}</title>
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/public.css"/>
+<link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/index.css"/>
+<script type="text/javascript" src="themesmobile/dm299_com/js/TouchSlide.1.1.js"></script>
+<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+</head>
+<body>
+  <!-- #BeginLibraryItem "/library/global_nav.lbi" --><!-- #EndLibraryItem -->
+<!--   <div class="index_search">
+  <div class="index_search_mid"> <a href="searchindex.php"> <em>请输入您所搜索的商品</em> <span><img src="themesmobile/dm299_com/images/icosousuo.png"></span> </a> </div>
+</div> -->
+{insert name='share'}
+{insert name='add_url_uid'}
+  <style>
+      .scrollimg{ position:relative; overflow:hidden; margin:0px auto; /* 设置焦点图最大宽度 */ }
+      .scrollimg .hd{ position: absolute;
+          bottom:0px;
+          text-align: center;
+          width: 100%;}
+      .scrollimg .hd li{display: inline-block;
+width: .4em;
+height: .4em;
+margin: 0 .4em;
+-webkit-border-radius: .8em;
+-moz-border-radius: .8em;
+-ms-border-radius: .8em;
+-o-border-radius: .8em;
+border-radius: .8em;
+background: #FFF;
+filter: alpha(Opacity=60);
+opacity: .6;
+box-shadow: 0 0 1px #ccc; text-indent:-100px; overflow:hidden; }
+      .scrollimg .hd li.on{ filter: alpha(Opacity=90);
+          opacity: .9;
+          background:#E71F19;
+          box-shadow: 0 0 2px #ccc; }
+      .scrollimg .bd{ position:relative; z-index:0; }
+      .scrollimg .bd li{ position:relative; text-align:center;  }
+      .scrollimg .bd li img{ background:url(images/loading.gif) center center no-repeat;  vertical-align:top; width:100%;/* 图片宽度100%，达到自适应效果 */}
+      .scrollimg .bd li a{ -webkit-tap-highlight-color:rgba(0,0,0,0);  }  /* 去掉链接触摸高亮 */
+      .scrollimg .bd li .tit{ display:block; width:100%;  position:absolute; bottom:0; text-indent:10px; height:28px; line-height:28px; background:url(images/focusBg.png) repeat-x; color:#fff;  text-align:left;  }
+      .marker {
+          font-size:14px;
+          color:#333;
+          line-height:1.5;
+      }
+      .marker em{
+          color:rgba(22, 155, 213, 1);
+      }
+      .gzBtn{
+          position:absolute;
+          display:block;
+          padding:0 10px;
+          border:1px solid rgba(22, 155, 213, 1);
+          color:rgba(22, 155, 213, 1);
+          font-size:14px;
+          right:20px;
+          top:0;
+      }
+  </style>
+  <link href="themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+  <div class="top">
+      <dl>
+          <dt><a href="javascript:history.back(-1)"></a></dt>
+          <dd>我的推广海报</dd>
+      </dl>
+  </div>
+  <div id="scrollimg" class="scrollimg">
+
+      <div class="bd">
+          <ul>
+              {foreach from=$bill_template item=ad name=wap_index_ad}
+                  <li>
+                      <a><img src="{$ad.file}" width="auto" height="500px;" style="width:auto;height:400px;max-width:100%;"/></a>
+                      <input type="hidden" name="template_{$ad.key}" id="template_{$ad.key}" value="{$ad.id}"/>
+                  </li>
+              {/foreach}
+          </ul>
+      </div>
+
+      <div class="hd" id="hd">
+          <ul></ul>
+      </div>
+  </div>
+  <div id="u4" class="ax_default primary_button" style="margin-top:15px;margin-bottom:30px;">
+      <div id="u4_text" class="text " style="background: inherit;background-color: rgba(22, 155, 213, 1); border: none;border-radius: 5px;width:60%;margin:0 auto;color:#ffffff;text-align:center;height:32px;line-height:32px;" onclick="share_detail()">
+          保存去分享
+      </div>
+  </div>
+  <div id="u28" class="ax_default paragraph" style="position:relative;margin-top:1rem;margin-bottom:30px;">
+      <span style="display:block;font-size:14px;color:#333;font-weight:bold;text-align: center;margin-bottom:10px;">邀好友赚佣金</span>
+      <div id="u28_text" class="text " style="text-align: center;">
+          <span class="marker"><em>●</em>保存去分享 —</span>
+          <span class="marker"><em>●</em>发送给朋友&nbsp; —</span>
+          <span class="marker"><em>●</em>朋友注册并下单</span>
+      </div>
+      <a href="user_share.php?act=rule" class="gzBtn">活动规则</a>
+  </div>
+
+  <script type="text/javascript">
+      TouchSlide({
+          slideCell:"#scrollimg",
+          titCell:".hd ul", //开启自动分页 autoPage:true ，此时设置 titCell 为导航元素包裹层
+          mainCell:".bd ul",
+          effect:"leftLoop",
+          autoPage:true,//自动分页
+          autoPlay:false //自动播放
+      });
+
+      function share_detail()
+      {
+          var index = $("#hd  .on").text();
+          index=$("#template_"+index).val();
+
+          window.location.href = "user_share.php?act=detail&id="+index;
+      }
+     /* var img_detail=bill_template_count;
+      var count=0;
+      var ref = setInterval(function(){
+          var index = $("#hd  .on").text();
+          index=$("#template_"+index).val();
+
+          $.post("user_share.php?act=img_detail",id:index,function(result){
+              ;
+          });
+          count++;
+          if(count>img_detail)
+          {
+              clearInterval(ref);
+          }
+      },1000);*/
+  </script>
+
+</body>
+</html>

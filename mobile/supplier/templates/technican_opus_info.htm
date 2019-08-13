@@ -1,0 +1,200 @@
+{if $full_page eq 1}
+<!DOCTYPE html>
+<html>
+  <head>
+	<link rel="stylesheet" href="../themesmobile/dm299_com/assets/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../themesmobile/dm299_com/assets/css/weui.css">
+    {include file='html_header.htm'}
+        <style>
+			.weui-cells__title{background: #fff;margin-top: 5px;margin-bottom: 1px;}
+			.weui-cells{margin-top: 5px;}
+		</style>
+  </head>
+  <body>
+    <div id='container'>
+      {/if}
+      {include file='page_header.htm'}
+		  <form action='' method="POST" id="myform">
+			<input name="is_ajax" class="weui-input" type="hidden" value="1">
+		  <input name="id" class="weui-input" type="hidden" value="{$opus_info.id}">
+		  <section style="width:96%;margin:0% 2%;">
+				<div class="weui-cells__title">作品标题</div>
+				<div class="weui-cells">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<input name="opus_title" class="weui-input" placeholder="请输入作品标题" type="text" value="{$opus_info.opus_title}">
+						</div>
+					</div>
+				</div>
+
+				<div class="weui-cells__title">作品描述</div>
+				<div class="weui-cells weui-cells_form">
+					<div class="weui-cell">
+						<div class="weui-cell__bd">
+							<textarea name="opus_desc"  id="opus_desc" class="weui-textarea" placeholder="请输入作品描述" rows="5">{$opus_info.opus_desc}</textarea>
+							<div class="weui-textarea-counter" ><span>作品描述不能超过300个字符</span></div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="weui-cells__title">作品上传</div>
+				<div class="weui-gallery" id="gallery">
+					<span class="weui-gallery__img" id="galleryImg"></span>
+					<div class="weui-gallery__opr">
+						<a href="javascript:" class="weui-gallery__del">
+							<i class="weui-icon-delete weui-icon_gallery-delete"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="weui-cells">
+					<div class="weui-uploader">
+							  
+						  <div class="weui-uploader__bd" style="padding: 3px;">
+									<ul class="weui-uploader__files" id="uploaderFiles">
+										{foreach from=$opus_info.opus_img item=opus}
+											<li class="weui-uploader__file" style="background-image:url({$opus})">
+												<input type="hidden" name="opus_img[]" value="{$opus}">
+											</li>
+										{/foreach}
+									</ul>
+									<div class="weui-uploader__input-box" id="uploader">
+										<input id="uploaderInput" class="weui-uploader__input" accept="image/*" multiple="" type="file">
+									</div>
+						 </div>
+					</div>
+				</div>
+
+				<div class="weui-cells">
+					<div class="button-sp-area">
+						<a href="javascript:;" id="mysubmit" class="weui-btn weui-btn_block weui-btn_primary" style="color:#fff;">提交</a>
+					</div>
+				</div>
+		  </section>
+		  </form>
+
+	<div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content" id="toast_content">已完成</p>
+        </div>
+    </div>
+
+	<div id="loadingToast" style="display:none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-loading weui-icon_toast"></i>
+            <p class="weui-toast__content">请求中</p>
+        </div>
+    </div>
+	 <script >
+		 $(function(){
+			
+			var tmpl = '<li class="weui-uploader__file" style="background-image:url(#url#)"></li>',
+				$gallery = $("#gallery"), $galleryImg = $("#galleryImg"),
+				$uploaderInput = $("#uploaderInput"),
+				$uploaderFiles = $("#uploaderFiles"),
+				$mysubmit	   = $("#mysubmit")
+				;
+			var fileArr	= new Array();
+				$uploaderInput.on("change", function(e){
+					
+					
+					var src, url = window.URL || window.webkitURL || window.mozURL, files = e.target.files;
+					for (var i = 0, len = files.length; i < len; ++i) {
+						var file = files[i];
+						//获取li数量,表示实时的上传图片数量
+						var length = $('#uploaderFiles').find('li').length;
+						console.log(length);
+						if(length >= 5) {
+							$('#toast_content').html('作品数量最多为5');
+							$('#toast').fadeIn(100);
+							setTimeout(function () {
+								$('#toast').fadeOut(100);
+							}, 2000);
+							checkPhotoNumber();
+							break;
+						}  
+						fileArr.push(file);
+						if (url) {
+							src = url.createObjectURL(file);
+						} else {
+							src = e.target.result;
+						}
+
+						$uploaderFiles.append($(tmpl.replace('#url#', src)));
+					}
+					checkPhotoNumber();
+				});
+				
+				var index;
+				$uploaderFiles.on("click", "li", function(e){
+					index = $(this).index();  
+					$galleryImg.attr("style", this.getAttribute("style"));
+					$gallery.fadeIn(100);
+				});
+				
+				$('.weui-gallery__del').on("click", function(){
+					$gallery.fadeOut(100);
+					$uploaderFiles.find("li").eq(index).remove();
+					fileArr.splice(index,1);
+					checkPhotoNumber();  
+				});
+
+				$('#galleryImg').on('click',function(){
+					$gallery.fadeOut(100);
+				});
+
+				function checkPhotoNumber(){
+					var length = $('#uploaderFiles').find('li').length;
+					if(length>=5){
+						$("#uploader").hide();
+					}else{
+						$("#uploader").show();
+					}
+				}
+
+				$mysubmit.on('click',function(){
+					$('#loadingToast').fadeIn(100);
+					var form=document.getElementById("myform");
+					var formData = new FormData(form);
+					if(fileArr.length!=0){
+			          		for(var i = 0;i<fileArr.length;i++){
+			          			formData.append("file[]",fileArr[i]);
+			          		}
+					}
+					$.ajax({
+						url: "technican.php?act=opus_save",
+						type: "POST",  
+						async: false,  
+						cache: false, 
+					    processData: false,// 告诉jQuery不要去处理发送的数据
+					    contentType: false,// 告诉jQuery不要去设置Content-Type请求头
+						data: formData,
+						dataType:'json',
+					    success: function(data){
+							$('#toast_content').html(data.msg);
+							$('#loadingToast').fadeOut(100);
+							$('#toast').fadeIn(100);
+							setTimeout(function () {
+								$('#toast').fadeOut(100);
+							}, 2000);
+							if(data.code == 200){
+								window.location.href = 'technican.php?act=opus';
+							}
+						}
+					});
+				});
+
+		});	
+	  </script>
+	<div style="width:100%;float:left;height:60px;"></div>
+      {include file='page_footer.htm'}
+      {if $full_page eq 1}
+    </div>
+    {include file='static_div.htm'}
+  </body>
+</html>
+{/if}
+

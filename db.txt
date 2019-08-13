@@ -1,0 +1,8 @@
+ALTER TABLE `ecs_back_order`
+ADD COLUMN `is_robot`  tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否是自动执行（脚本、队列等）' AFTER `sync_result`;
+
+ALTER TABLE `ecs_supplier`
+ADD COLUMN `logo`  varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '店铺logo' AFTER `technican_bodyimg`,
+ADD COLUMN `desc`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '' COMMENT '店铺描述' AFTER `logo`;
+
+

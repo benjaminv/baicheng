@@ -1,0 +1,819 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="validator.js,../js/transport.org.js,../js/region.js"}
+<div class="main-div" style="padding:10px;background:#fff;">
+<style type="text/css">
+.store-joinin th{padding:10px;text-align:left;text-indent:10px;font-weight:bold;background:#F7F7F7;color:#1F84B0;margin-bottom:15px;}
+.store-joinin td{padding:5px 1em}
+</style>
+    <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+        <thead>
+        <tr>
+            <th colspan="2">店铺身份</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td class="label">店铺所属会员：</td>
+            <td>
+                {if $supplier.supplier_id!=0}
+                    <input name="user_name" value="{$supplier.user_name}">
+                {else}
+                <label>{$lang.by_useridname}</label>
+                <input id="user_keyword" type="text" value="" />
+                <input type="button" class="button" name="search" value="{$lang.button_search}" onclick="searchUser();" />
+                <select id="user_id"></select>
+                <p>{$lang.notice_user}</p>
+                {/if}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">店铺身份类型：</td>
+            <td>
+                <label><input type="radio" name="apply_type" value="person" {if $supplier.type_id=='0'} checked{/if}>个人</label>
+                <label><input type="radio" name="apply_type" value="company" {if $supplier.type_id!='0'} checked{/if}>企业</label>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+  <!--如果公司类型不为空，显示公司申请的信息，如果为空显示个人申请的信息-->
+<div id="apply_company_info" {if $supplier.type_id =='0'} style="display: none;"{/if}>
+    <form method="post" action="supplier.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate('theForm')">
+		<table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+			<thead>
+			  <tr>
+				<th colspan="2">公司及联系人信息</th>
+			  </tr>
+			</thead>
+			<tbody>
+			  <tr>
+				<td class="label">公司名称：</td>
+				<td><input type="text" name="company_name" value="{$supplier.company_name|escape}" style="float:left;" size="30" /></td>
+			  </tr>
+			  <tr>
+				<td class="label">公司所在地：</td>
+				<td>
+				<select name="country" id="selCountries_0" onchange="region.changed(this, 1, 'selProvinces_0')">
+				  <option value="0">请选择</option>
+				   {foreach from=$country_list item=country}
+				  <option value="{$country.region_id}" {if $supplier_country eq $country.region_id}selected{/if}>{$country.region_name}</option>
+				   {/foreach}
+				</select>
+				<select name="province" id="selProvinces_0" onchange="region.changed(this, 2, 'selCities_0')" >
+				  <option value="0">请选择</option>
+				   {foreach from=$province_list item=province}
+				  <option value="{$province.region_id}" {if $supplier.province eq $province.region_id}selected{/if}>{$province.region_name}</option>
+				   {/foreach}
+				</select>
+				<select name="city" id="selCities_0" onchange="region.changed(this, 3, 'selDistricts_0')" >
+				  <option value="0">请选择</option>
+				   {foreach from=$city_list item=city}
+				  <option value="{$city.region_id}" {if $supplier.city eq $city.region_id}selected{/if}>{$city.region_name}</option>
+				   {/foreach}
+				</select>
+				<select name="district" id="selDistricts_0" {if !$district_list}style="display:none"{/if} >
+				  <option value="0">请选择</option>
+				   {foreach from=$district_list item=district}
+				  <option value="{$district.region_id}" {if $supplier.district eq $district.region_id}selected{/if}>{$district.region_name}</option>
+				   {/foreach}
+				</select>
+				</td>
+			  </tr>
+			  <tr>
+				<td class="label">公司详细地址：</td>
+				<td><input type="text" name="address" value="{$supplier.address|escape}" style="float:left;" size="30" /></td>
+			  </tr>
+			  <tr>
+				<td class="label">公司电话：</td>
+				<td><input type="text" name="tel" value="{$supplier.tel|escape}" style="float:left;" size="30" /></td>
+			  </tr>
+			  <tr>
+				<td class="label">公司规模：</td>
+				<td><input type="text" name="guimo" value="{$supplier.guimo|escape}" style="float:left;" size="30" /></td>
+			  </tr>
+			  <tr>
+				<td class="label">公司类型：</td>
+				<td>
+					<select name="company_type" class="w200">
+						<option value="">请选择</option>
+						{foreach from=$company_type item=comtype}
+						<option value="{$comtype}" {if $supplier.company_type eq $comtype}selected{/if}>{$comtype}</option>
+						{/foreach}
+					</select></td>
+			  </tr>
+			  <tr>
+				<td class="label">联系人姓名：</td>
+				<td><input type="text" name="contacts_name" value="{$supplier.contacts_name|escape}" style="float:left;" size="30" /></td>
+			  </tr>
+			  <tr>
+				<td class="label">联系人电话：</td>
+				<td><input type="text" name="contacts_phone" value="{$supplier.contacts_phone|escape}" style="float:left;" size="30" /></td>
+			  </tr>
+			  <tr>
+				<td class="label">电子邮箱：</td>
+				<td><input type="text" name="email" value="{$supplier.email|escape}" style="float:left;" size="30" /></td>
+			  </tr>
+			</tbody>
+		</table>
+	  <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+		<thead>
+		  <tr>
+			<th colspan="2">营业执照信息（副本）</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td class="label">营业执照号：</td>
+			<td><input type="text" name="business_licence_number" value="{$supplier.business_licence_number|escape}" style="float:left;" size="30" /></td></tr><tr>
+		  </tr>
+		  <tr>
+			<td class="label">法定经营范围：</td>
+			<td><input type="text" name="business_sphere" value="{$supplier.business_sphere|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		  <tr>
+			<td class="label">营业执照号<br>电子版：</td>
+			<td>
+				<input type="file" name="zhizhao"/><br />
+				<div style="padding:10px 0px">
+				{if $supplier.zhizhao}<img src="../data/supplier/{$supplier.zhizhao}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.zhizhao}');" value="查看原图">{/if}
+				</div>
+			</td>
+		  </tr>
+		</tbody>
+	  </table>
+
+	  <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+		<thead>
+		  <tr>
+			<th colspan="2">组织机构代码证</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td class="label">组织机构代码：</td>
+			<td><input type="text" name="organization_code" value="{$supplier.organization_code|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		  <tr>
+			<td class="label">组织机构代码证<br>电子版：</td>
+			<td>
+				<input type="file" name="organization_code_electronic"/><br />
+				<div style="padding:10px 0px">
+				{if $supplier.organization_code_electronic}<img src="../data/supplier/{$supplier.organization_code_electronic}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.organization_code_electronic}');" value="查看原图">{/if}
+				</div>
+			</td>
+		  </tr>
+		</tbody>
+	  </table>
+
+	  <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+		<thead>
+		  <tr>
+			<th colspan="2">一般纳税人证明</td>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td class="label">一般纳税人证明：</td>
+			<td>
+				<input type="file" name="general_taxpayer"/><br />
+				<div style="padding:10px 0px">
+					{if $supplier.general_taxpayer}<img src="../data/supplier/{$supplier.general_taxpayer}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.general_taxpayer}');" value="查看原图">{/if}
+				</div>
+			</td>
+		  </tr>
+		</tbody>
+	  </table>
+
+	  <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+		<thead>
+		  <tr>
+			<th colspan="2">税务登记证</td>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td class="label">税务登记证号：</td>
+			<td><input type="text" name="tax_registration_certificate" value="{$supplier.tax_registration_certificate|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		  <tr>
+			<td class="label">纳税人识别号：</td>
+			<td><input type="text" name="taxpayer_id" value="{$supplier.taxpayer_id|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		  <tr>
+			<td class="label">税务登记证号<br>电子版：</td>
+			<td>
+				<input type="file" name="tax_registration_certificate_electronic"/><br />
+				<div style="padding:10px 0px">
+				{if $supplier.tax_registration_certificate_electronic}<img src="../data/supplier/{$supplier.tax_registration_certificate_electronic}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.tax_registration_certificate_electronic}');" value="查看原图">{/if}
+				</div>
+			</td>
+		  </tr>
+		</tbody>
+	  </table>
+	 <!--
+	  <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+		<thead>
+		  <tr>
+			<th colspan="2">开户银行信息</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td class="label">银行开户名：</td>
+			<td><input type="text" name="bank_account_name" value="{$supplier.bank_account_name|escape}" style="float:left;" size="30" /></td>
+		  </tr><tr>
+			<td class="label">公司银行账号：</td>
+			<td><input type="text" name="bank_account_number" value="{$supplier.bank_account_number|escape}" style="float:left;" size="30" /></td></tr>
+		  <tr>
+			<td class="label">开户银行支行名称：</td>
+			<td><input type="text" name="bank_name" value="{$supplier.bank_name|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		 <!--  <tr>
+			<td class="label">支行联行号：</td>
+			<td><input type="text" name="bank_code" value="{$supplier.bank_code|escape}" style="float:left;" size="30" /></td>
+		  </tr> -->
+		 <!--  <tr>
+			<td class="label">开户银行许可证<br>电子版：</td>
+			<td>
+				<input type="file" name="bank_licence_electronic"/><br />
+				<div style="padding:10px 0px">
+				{if $supplier.bank_licence_electronic}<img src="../data/supplier/{$supplier.bank_licence_electronic}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.bank_licence_electronic}');" value="查看原图">{/if}
+				</div>
+			</td>
+		  </tr> 
+		</tbody>
+	  </table>
+	  -->
+	<!--
+	  <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+		<thead>
+		  <tr>
+			<th colspan="2">结算账号信息</th>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td class="label">银行开户名：</td>
+			<td><input type="text" name="settlement_bank_account_name" value="{$supplier.settlement_bank_account_name|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		  <tr>
+			<td class="label">公司银行账号：</td>
+			<td><input type="text" name="settlement_bank_account_number" value="{$supplier.settlement_bank_account_number|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		  <tr>
+			<td class="label">开户银行支行名称：</td>
+			<td><input type="text" name="settlement_bank_name" value="{$supplier.settlement_bank_name|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		  <tr>
+			<td class="label">支行联行号：</td>
+			<td><input type="text" name="settlement_bank_code" value="{$supplier.settlement_bank_code|escape}" style="float:left;" size="30" /></td>
+		  </tr>
+		</tbody>
+	  </table>
+     -->
+    <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+      <thead>
+        <tr>
+          <th colspan="2">店铺经营信息</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label">供货商名称：</td>
+          <td><input type="text" name="supplier_name" value="{$supplier.supplier_name|escape}" style="float:left;" size="30" /></td>
+        </tr>
+		<tr>
+          <td class="label">店铺类型:</td>
+          <td>
+			<select name="is_ipc_shopping" size=1  class="ipc-shopping" onchange="ipc_change(this)">
+                  <option value="0" {if $supplier.is_ipc_shopping eq 0}selected{/if}>美容院</option>
+                  <option value="1" {if $supplier.is_ipc_shopping eq 1}selected{/if}>异业店铺</option>
+				  <option value="2" {if $supplier.is_ipc_shopping eq 2}selected{/if}>技师店铺</option>
+				  <option value="3" {if $supplier.is_ipc_shopping eq 3}selected{/if}>医院/门诊</option>
+            </select>
+		  </td>
+        </tr>
+
+		  <tr class="technican-block" {if $supplier.is_ipc_shopping neq 2}style="display:none"{/if}>
+			<td class="label">个人介绍:</td>
+			<td>
+				<div style="padding:10px 0px">
+				<textarea name='opus_remark'  rows=4 cols=50>{$supplier.opus_remark}</textarea>
+				</div>
+			</td>
+		  </tr>
+
+		  <tr class="technican-block" {if $supplier.is_ipc_shopping neq 2}style="display:none"{/if}>
+			<td class="label">个人艺术照：</td>
+			<td>
+				<input type="file" name="technican_bodyimg"/><br />
+				<div style="padding:10px 0px">
+				{if $supplier.technican_bodyimg}<img src="{$supplier.technican_bodyimg}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('{$supplier.technican_bodyimg}');" value="查看原图">{/if}
+				</div>
+			</td>
+		  </tr>
+
+        <tr>
+          <td class="label">店铺等级：</td>
+          <td>
+              <!--
+              <input type="text" name="rank_name" value="{$supplier.rank_name|escape}" style="float:left;" size="30" />
+              -->
+              <select name="rank_id">
+                  {html_options options=$supplier_rank_list selected=$rank_id}
+              </select>
+		  </td>
+        </tr>
+		<!--
+        <tr>
+          <td class="label">店铺分类：</td>
+          <td>
+              <select name="type_id" size=1  class="province_select">
+                  <option value="0">请选择</option>
+                  {foreach from=$supplier_type item=type}
+                  <option value="{$type.str_id}" {if $supplier.type_id eq $type.str_id}selected{/if}>{$type.str_name}</option>
+                  {/foreach}
+              </select></td>
+        </tr>
+		-->
+        {* 代码删除 By www.68ecshop.com Start *}
+        <!--
+        <tr>
+			<td class="label">结算类型：</td>
+			<td>
+				<select name="supplier_rebate_paytime" size=1>
+				<option value="0">请选择</option>
+				<option value="1" {if $supplier.supplier_rebate_paytime eq '1'}selected{/if}>周</option>
+				<option value="2" {if $supplier.supplier_rebate_paytime eq '2'}selected{/if}>月</option>
+				<option value="3" {if $supplier.supplier_rebate_paytime eq '3'}selected{/if}>季度</option>
+				<option value="4" {if $supplier.supplier_rebate_paytime eq '4'}selected{/if}>年</option>
+				</select>
+			</td>
+		</tr>
+		-->
+        {* 代码删除 By www.68ecshop.com End *}
+		<tr>
+			<td class="label">新会员平台抽成比例：</td>
+			<td><input type="text" name="system_fee" value="{if $supplier.system_fee>0.00}{$supplier.system_fee}{/if}">%</td>
+		</tr>
+		<tr>
+			<td class="label">老会员平台抽成比例：</td>
+			<td><input type="text" name="old_user_rate" value="{if $supplier.old_user_rate>0.00}{$supplier.old_user_rate}{/if}">%</td>
+		</tr>
+		<!--<tr>
+		<td class="label">商家保证金：</td>
+		<td><input type="text" name="supplier_bond" value="{if $supplier.supplier_bond}{$supplier.supplier_bond}{/if}"></td>
+		</tr>
+		<tr>
+		<td class="label">分成百分比：</td>
+		<td><input type="text" name="supplier_rebate" value="{if $supplier.supplier_rebate}{$supplier.supplier_rebate}{/if}">%</td>
+		</tr>-->
+		<tr>
+			<td class="label">数据库名称：</td>
+			<td><input type="text" name="databases" value="{if $supplier.databases_name}{$supplier.databases_name}{/if}"></td>
+		</tr>
+		<tr>
+			<td class="label"> 复制点铺：</td> 
+			<td>
+			  <select  name="copy_supplier_id" class="copy_supplier_id">
+								<option>不选择</option>
+								{foreach from=$supplier_list item=sitem}
+								<option value="{$sitem.supplier_id}" {if $sitem.supplier_id eq $config.config.default_reg_supplier_id}selected{/if}>{$sitem.supplier_name}</option>
+								{/foreach}
+			  </select>
+			</td> 
+		</tr>
+		<tr>
+			<td class="label">审核意见：</td><td><textarea name="supplier_remark" rows=4 cols=50>{$supplier.supplier_remark}</textarea></td>
+		</tr>
+		<tr>
+			<td class="label">审核状态：</td><td>
+				<select name="status" size=1>
+					<option value="0" {if $supplier.status eq '0'}selected{/if}>未审核</option>
+					<option value="1" {if $supplier.status eq '1'}selected{/if}>审核通过</option>
+					<option value="-1" {if $supplier.status eq '-1'}selected{/if}>审核不通过</option>
+				</select>
+				<span style="color:red">
+					<br>1,店铺由<b>"审核通过"</b>变为<b>"审核不通过"</b>等同于关闭店铺，店铺相关商品下架，店铺街不再显示此店铺；
+					<br>2,由<b>"审核不通过"</b>再次变为<b>"审核通过"</b>,相关商品需要手动上架，店铺街展示需要再次申请；
+					<br>3,确定后，入驻商后台登陆密码将与前台登陆密码同步；
+				</span>
+			</td>
+		</tr>
+      </tbody>
+    </table>
+
+	<table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+	  <tr>
+		<td align="center">
+            <input type="hidden" name="user_id" value="{$supplier.user_id}">
+		  <input type="submit" class="button" value="{$lang.button_submit}" />
+		  <input type="reset" class="button" value="{$lang.button_reset}" />
+		  <input type="hidden" name="act" value="{$form_action}" />
+		  <input type="hidden" name="status_url" value="{$supplier.status}">
+		  <input type="hidden" name="id" value="{$supplier.supplier_id}" />
+            <input type="hidden" name="apply_type" value="company">
+		</td>
+	  </tr>
+	</table>
+  </form>
+</div>
+
+<div id="apply_person_info" {if $supplier.type_id !='0'} style="display: none;"{/if}>
+<form method="post" action="supplier.php" name="theForm2" enctype="multipart/form-data" onsubmit="return validate('theForm2')">
+  <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+    <thead>
+      <tr>
+        <th colspan="2">入驻商个人信息</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label">店铺名称：</td>
+        <td><input type="text" name="company_name" value="{$supplier.company_name|escape}" style="float:left;" size="30" /></td>
+      </tr>
+      <tr>
+        <td class="label">联系地址：</td>
+        <td>
+		<select name="country" id="selCountries_1" onchange="region.changed(this, 1, 'selProvinces_1')">
+		  <option value="0">请选择</option>
+		   {foreach from=$country_list item=country}
+		  <option value="{$country.region_id}" {if $supplier_country eq $country.region_id}selected{/if}>{$country.region_name}</option>
+		   {/foreach}
+		</select>
+		<select name="province" id="selProvinces_1" onchange="region.changed(this, 2, 'selCities_1')">
+		  <option value="0">请选择</option>
+		   {foreach from=$province_list item=province}
+		  <option value="{$province.region_id}" {if $supplier.province eq $province.region_id}selected{/if}>{$province.region_name}</option>
+		   {/foreach}
+		</select>
+		<select name="city" id="selCities_1" onchange="region.changed(this, 3, 'selDistricts_1')">
+		  <option value="0">请选择</option>
+		   {foreach from=$city_list item=city}
+		  <option value="{$city.region_id}" {if $supplier.city eq $city.region_id}selected{/if}>{$city.region_name}</option>
+		   {/foreach}
+		</select>
+		<select name="district" id="selDistricts_1" {if !$district_list}style="display:none"{/if}>
+		  <option value="0">请选择</option>
+		   {foreach from=$district_list item=district}
+		  <option value="{$district.region_id}" {if $supplier.district eq $district.region_id}selected{/if}>{$district.region_name}</option>
+		   {/foreach}
+		</select>
+		</td>
+      </tr>
+      <tr>
+      	<td class="label">详细地址：</td>
+        <td><input type="text" name="address" value="{$supplier.address|escape}" style="float:left;" size="30" /></td>
+      </tr>
+      <tr>
+        <td class="label">姓名：</td>
+        <td><input type="text" name="contacts_name" value="{$supplier.contacts_name|escape}" style="float:left;" size="30" /></td>
+      </tr>
+      <tr>
+        <td class="label">联系人电话：</td>
+        <td><input type="text" name="contacts_phone" value="{$supplier.contacts_phone|escape}" style="float:left;" size="30" /></td>
+      </tr>
+    <!--   <tr>
+        <td class="label">电子邮箱：</td>
+        <td><input type="text" name="email" value="{$supplier.email|escape}" style="float:left;" size="30" /></td>
+      </tr> -->
+
+    <!--   <tr>
+        <td class="label">身份证号码：</td>
+        <td><input type="text" name="id_card_no" value="{$supplier.id_card_no|escape}" style="float:left;" size="30" /></td></tr><tr>
+      </tr> -->
+     <!--  <tr>
+        <td class="label">手持身份证照片：</td>
+        <td>
+            <input type="file" name="handheld_idcard"/><br />
+            <div style="padding:10px 0px">
+                {if $supplier.handheld_idcard}<img src="../data/supplier/{$supplier.handheld_idcard}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.handheld_idcard}');" value="查看原图">{/if}
+            </div>
+            </td>
+      </tr> -->
+    <!--   <tr>
+        <td class="label">身份证正面：</td>
+        <td>
+            <input type="file" name="idcard_front"/><br />
+            <div style="padding:10px 0px">
+                {if $supplier.idcard_front}<img src="../data/supplier/{$supplier.idcard_front}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.idcard_front}');" value="查看原图">{/if}
+            </div>
+            </td>
+      </tr> -->
+     <!--  <tr>
+        <td class="label">身份证反面：</td>
+        <td>
+            <input type="file" name="idcard_reverse"/><br />
+            <div style="padding:10px 0px">
+                {if $supplier.idcard_reverse}<img src="../data/supplier/{$supplier.idcard_reverse}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.idcard_reverse}');" value="查看原图">{/if}
+            </div></td>
+      </tr> -->
+    </tbody>
+  </table>
+<!-- 
+    <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+    <thead>
+      <tr>
+        <th colspan="2">开户银行信息</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="label">银行开户名：</td>
+        <td><input type="text" name="bank_account_name" value="{$supplier.bank_account_name|escape}" style="float:left;" size="30" /></td>
+      </tr><tr>
+        <td class="label">个人银行账号：</td>
+        <td><input type="text" name="bank_account_number" value="{$supplier.bank_account_number|escape}" style="float:left;" size="30" /></td></tr>
+      <tr>
+        <td class="label">开户银行支行名称：</td>
+        <td><input type="text" name="bank_name" value="{$supplier.bank_name|escape}" style="float:left;" size="30" /></td>
+      </tr>
+      <!-- <tr>
+        <td class="label">支行联行号：</td>
+        <td><input type="text" name="bank_code" value="{$supplier.bank_code|escape}" style="float:left;" size="30" /></td>
+      </tr> 
+    </tbody>
+  </table>
+	-->
+
+
+    <table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+      <thead>
+        <tr>
+          <th colspan="2">店铺经营信息</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label">供货商名称：</td>
+          <td><input type="text" name="supplier_name" value="{$supplier.supplier_name|escape}" style="float:left;" size="30" /></td>
+        </tr>
+		<tr>
+
+          <td class="label">店铺类型:</td>
+          <td>
+			<select name="is_ipc_shopping" size=1  class="ipc-shopping" onchange="ipc_change(this)">
+                  <option value="0" {if $supplier.is_ipc_shopping eq 0}selected{/if}>美容院</option>
+                  <option value="1" {if $supplier.is_ipc_shopping eq 1}selected{/if}>异业店铺</option>
+				  <option value="2" {if $supplier.is_ipc_shopping eq 2}selected{/if}>技师</option>
+				  <option value="3" {if $supplier.is_ipc_shopping eq 3}selected{/if}>医院/门诊</option>
+            </select>
+		  </td>
+        </tr>
+
+		  <tr class="technican-block" {if $supplier.is_ipc_shopping neq 2}style="display:none"{/if}>
+			<td class="label">作品描述：</td>
+			<td>
+				<div style="padding:10px 0px">
+				<textarea name='opus_remark'  rows=4 cols=50>{$supplier.opus_remark}</textarea>
+				</div>
+			</td>
+		  </tr>
+
+		  <tr class="technican-block" {if $supplier.is_ipc_shopping neq 2}style="display:none"{/if}>
+			<td class="label">个人艺术照：</td>
+			<td>
+				<input type="file" name="technican_bodyimg"/><br />
+				<div style="padding:10px 0px">
+				{if $supplier.technican_bodyimg}<img src="../data/supplier/{$supplier.technican_bodyimg}" width=50 height=50>&nbsp;&nbsp;<input type="button" onclick="window.open('../data/supplier/{$supplier.technican_bodyimg}');" value="查看原图">{/if}
+				</div>
+			</td>
+		  </tr>
+        <tr>
+            <td class="label">店铺等级：</td>
+            <td>
+                <!--
+                <input type="text" name="rank_name" value="{$supplier.rank_name|escape}" style="float:left;" size="30" />
+                -->
+                <select name="rank_id">
+                    {html_options options=$supplier_rank_list selected=$rank_id}
+                </select>
+            </td>
+        </tr>
+		<!--
+       <tr>
+          <td class="label">店铺分类：</td>
+          <td>
+              <select name="type_id" size=1  class="province_select">
+                  <option value="0">请选择</option>
+                  {foreach from=$supplier_type item=type}
+                  <option value="{$type.str_id}" {if $supplier.type_id eq $type.str_id}selected{/if}>{$type.str_name}</option>
+                  {/foreach}
+              </select>
+          </td>
+        </tr>
+		-->
+        {* 代码删除 By www.68ecshop.com Start *}
+        <!--
+		<tr>
+			<td class="label">结算类型：</td>
+			<td>
+				<select name="supplier_rebate_paytime" size=1>
+				<option value="0">请选择</option>
+				<option value="1" {if $supplier.supplier_rebate_paytime eq '1'}selected{/if}>周</option>
+				<option value="2" {if $supplier.supplier_rebate_paytime eq '2'}selected{/if}>月</option>
+				<option value="3" {if $supplier.supplier_rebate_paytime eq '3'}selected{/if}>季度</option>
+				<option value="4" {if $supplier.supplier_rebate_paytime eq '4'}selected{/if}>年</option>
+				</select>
+			</td>
+		</tr>
+        -->
+        {* 代码删除 By www.68ecshop.com End *}
+		<tr>
+			<td class="label">新会员平台抽成比例：</td>
+			<td><input type="text" name="system_fee" value="{if $supplier.system_fee>0.00}{$supplier.system_fee}{/if}">%</td>
+		</tr>
+		<tr>
+			<td class="label">老会员平台抽成比例：</td>
+			<td><input type="text" name="old_user_rate" value="{if $supplier.old_user_rate>0.00}{$supplier.old_user_rate}{/if}">%</td>
+		</tr>
+		<!--<tr>
+		<td class="label">商家保证金：</td>
+		<td><input type="text" name="supplier_bond" value="{if $supplier.supplier_bond}{$supplier.supplier_bond}{/if}"></td>
+		</tr>
+		<tr>
+		    <td class="label">分成百分比：</td>
+		    <td><input type="text" name="supplier_rebate" value="{if $supplier.supplier_rebate}{$supplier.supplier_rebate}{/if}">%</td>
+		</tr>
+		-->
+    <tr>
+        <td class="label">数据库名称：</td>
+        <td><input type="text" name="databases" value="{if $supplier.databases_name}{$supplier.databases_name}{/if}" required></td>
+    </tr>
+    <tr>
+        <td class="label"> 复制点铺：</td> 
+        <td>
+          <select  name="copy_supplier_id" class="copy_supplier_id">
+                            <option>不选择</option>
+                            {foreach from=$supplier_list item=sitem}
+                            <option value="{$sitem.supplier_id}" {if $sitem.supplier_id eq $config.config.default_reg_supplier_id}selected{/if}>{$sitem.supplier_name}</option>
+                            {/foreach}
+          </select>
+        </td> 
+    </tr>
+		<tr>
+		<td class="label">审核意见：</td><td><textarea name="supplier_remark" rows=4 cols=50>{$supplier.supplier_remark}</textarea></td>
+		</tr>
+		<tr>
+		<td class="label">审核状态：</td><td>
+		<select name="status" size=1><option value="0" {if $supplier.status eq '0'}selected{/if}>未审核</option><option value="1" {if $supplier.status eq '1'}selected{/if}>审核通过</option><option value="-1" {if $supplier.status eq '-1'}selected{/if}>审核不通过</option></select><span style="color:red"><br>1,店铺由<b>"审核通过"</b>变为<b>"审核不通过"</b>等同于关闭店铺，店铺相关商品下架，店铺街不再显示此店铺；<br>2,由<b>"审核不通过"</b>再次变为<b>"审核通过"</b>,相关商品需要手动上架，店铺街展示需要再次申请；<br>3,确定后，入驻商后台登陆密码将与前台登陆密码同步；</span></td>
+		</tr>
+      </tbody>
+    </table>
+
+	<table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+	  <tr>
+		<td align="center">
+            <input type="hidden" name="user_id" value="{$supplier.user_id}">
+		  <input type="submit" class="button" value="{$lang.button_submit}" />
+		  <input type="reset" class="button" value="{$lang.button_reset}" />
+		  <input type="hidden" name="act" value="{$form_action}" />
+		  <input type="hidden" name="status_url" value="{$supplier.status}">
+		  <input type="hidden" name="id" value="{$supplier.supplier_id}" />
+          <input type="hidden" id="person" value="1">
+            <input type="hidden" name="apply_type" value="person">
+		</td>
+	  </tr>
+	</table>
+
+  </form>
+    </div>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+region.isAdmin = true;
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+/**
+ * 按用户编号或用户名搜索用户
+ */
+function searchUser() {
+    var eles = document.forms['theForm'].elements;
+    /* 填充列表 */
+    var idName = Utils.trim($("#user_keyword").val());
+    if (idName != '')
+    {
+        Ajax.call('supplier.php?act=search_users&id_name=' + idName, '', searchUserResponse, 'GET', 'JSON');
+    }
+}
+
+function searchUserResponse(result) {
+    if (result.message.length > 0) {
+        alert(result.message);
+    }
+    if (result.error == 0) {
+        /* 清除列表 */
+        $("#user_id").html("");
+        var arr = result.userlist;
+        var userCnt = arr.length;
+        for (var i = 0; i < userCnt; i++)
+        {
+            var opt = document.createElement('OPTION');
+            opt.value = arr[i].user_id;
+            opt.text = arr[i].user_name;
+            $("#user_id").append(opt);
+        }
+    }
+}
+$("input:radio[name='apply_type']").click(function(){
+    $("#apply_company_info,#apply_person_info").hide();
+    $("#apply_"+this.value+"_info").show();
+})
+
+function ipc_change(obj){
+	var ipc_shopping = $(obj).val();
+
+	if(ipc_shopping == 2){
+
+		$('.technican-block').show();
+	}else{
+		$('.technican-block').hide();
+	}
+
+	// 更换店铺的类型
+
+	Ajax.call('supplier.php?act=get_copy_shop_type&is_ipc_shopping='+ipc_shopping, '', callback_function, 'GET', 'JSON');
+}
+
+
+function callback_function(rel){
+
+	
+    var lens = rel.content.length;
+
+	if($('#apply_company_info').css('display') == 'none'){ // 表示个人
+
+		$('.copy_supplier_id').eq(1).empty();
+		$('.copy_supplier_id').eq(1).append("<option>不选择</option>");
+
+		for(var i=0;i<lens;i++){
+
+			$('.copy_supplier_id').eq(1).append("<option value='"+rel.content[i]['supplier_id']+"'>"+rel.content[i]['supplier_name']+"</option>");
+		}
+
+	}else{ // 表示公司的显示
+
+
+		$('.copy_supplier_id').eq(0).empty();
+		$('.copy_supplier_id').eq(0).append("<option>不选择</option>");
+
+		for(var i=0;i<lens;i++){
+
+			$('.copy_supplier_id').eq(0).append("<option value='"+rel.content[i]['supplier_id']+"'>"+rel.content[i]['supplier_name']+"</option>");
+		}
+	}
+   
+	
+    
+
+}
+/**
+ * 检查表单输入的数据
+ */
+function validate(form)
+{
+    var user_id=$("#user_id").val();
+    if(user_id==''){alert("请选择一个店铺所属会员！");return false;}
+    $("form input[name='user_id']").val(user_id);
+	var theForm=document.forms[form];
+    validator = new Validator(form);
+    validator.isNumber("system_fee",  "新会员平台抽成比例需为整数！");
+	//validator.isNumber("supplier_bond",  "商家保证金需为整数！");
+	//validator.isNumber("supplier_rebate",  "百分位需为整数！");
+	if (theForm.elements['status'].value == '1')
+	{
+		if(theForm.elements["apply_type"].value=="company"){
+			//validator.required("settlement_bank_account_name",  "填写了银行开户名才能审核通过！");
+			//validator.required("settlement_bank_account_number",  "填写了公司银行账号才能审核通过！");
+			//validator.required("settlement_bank_name",  "填写了开户银行支行名称才能审核通过！");
+			//validator.required("settlement_bank_code",  "填写了支行联行号才能审核通过！");
+
+			//validator.required("system_fee",  "填写了平台使用费才能审核通过！");
+			//validator.required("supplier_bond",  "填写了商家保证金才能审核通过！");
+			//validator.required("supplier_rebate",  "填写了分成百分比才能审核通过！");
+		}
+		if(theForm.elements["apply_type"].value=="person"){
+			///validator.required("bank_account_name",  "填写了银行开户名才能审核通过！");
+			//validator.required("bank_account_number",  "填写了个人银行账号才能审核通过！");
+			//validator.required("bank_name",  "填写了开户银行支行名称才能审核通过！");
+			//validator.required("bank_code",  "填写了支行联行号才能审核通过！");
+
+			//validator.required("system_fee",  "填写了平台使用费才能审核通过！");
+			//validator.required("supplier_bond",  "填写了商家保证金才能审核通过！");
+			//validator.required("supplier_rebate",  "填写了分成百分比才能审核通过！");
+		}
+	}
+
+
+
+    return validator.passed();
+}
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

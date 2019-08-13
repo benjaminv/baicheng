@@ -1,0 +1,85 @@
+{if $full_page eq 1}
+<!DOCTYPE html>
+<html>
+  <head>
+	<link rel="stylesheet" href="../themesmobile/dm299_com/assets/font-awesome-4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../themesmobile/dm299_com/assets/css/weui.css">
+    {include file='html_header.htm'}
+    <style>
+		.weui-cells{margin:4px 0px;}
+	</style>
+  </head>
+  <body>
+    <div id='container'>
+      {/if}
+      {include file='page_header.htm'}
+      <section>
+       
+        <div class="order_pd goods_pd"  id="con_order_manage_1">
+		<div class="button-sp-area">
+			<a href="technican.php?act=opus_add"  style="color:#fff;" class="weui-btn weui-btn_block weui-btn_primary">新增作品</a>
+        </div>
+		{foreach from=$opus item=item}
+		<div class="weui-panel__bd weui-cells opus-edit" attr-id="{$item.id}">
+			<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+				<div class="weui-media-box__hd">
+					<img class="weui-media-box__thumb" src="{$item.opus_logo}" alt="作品图片">
+				</div>
+				<div class="weui-media-box__bd">
+					<h4 class="weui-media-box__title">{$item.opus_title}</h4>
+					<p class="weui-media-box__desc">{$item.opus_desc}</p>
+				</div>
+				<span  class="weui-btn weui-btn_mini weui-btn_primary opus-del" attr-id="{$item.id}">删除</span>
+			</a>
+		</div>
+		{/foreach}
+         
+          {include file='page.htm'}
+        </div>
+      </section>
+
+	<div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content" id="toast_content">已完成</p>
+        </div>
+    </div>
+      {include file='page_footer.htm'}
+	  <script>
+	  $(function(){
+		$('.opus-edit').on('click',function(){
+			var id = $(this).attr('attr-id');
+			window.location.href = 'technican.php?act=opus_edit&id='+id;
+		});
+
+		$('.opus-del').on('click',function(e){
+			e.stopPropagation();
+			e.preventDefault()
+			var id = $(this).attr('attr-id');
+			$.ajax({
+				url: "technican.php?act=opus_del",
+				type: "POST",  
+				data: {id:id,is_ajax:1},
+				dataType:'json',
+				success: function(data){
+					$('#toast_content').html(data.msg);
+					$('#toast').fadeIn(100);
+					setTimeout(function () {
+						$('#toast').fadeOut(100);
+					}, 2000);
+					if(data.code == 200){
+						window.location.href=window.location.href;
+					}
+				}
+			});
+		});
+	  })
+	  </script>
+      {if $full_page eq 1}
+    </div>
+    {include file='static_div.htm'}
+  </body>
+</html>
+{/if}
+

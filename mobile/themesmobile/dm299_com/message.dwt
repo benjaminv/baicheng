@@ -1,0 +1,62 @@
+<!DOCTYPE html >
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width">
+  <title>{$page_title}</title>
+  <meta name="Keywords" content="{$keywords}" />
+  <meta name="Description" content="{$description}" />
+  <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+  <link rel="stylesheet" href="themesmobile/dm299_com/css/loginxin.css">
+  <link rel="stylesheet" href="themesmobile/dm299_com/css/public.css" >
+  </head>
+
+<body>
+  <!-- #BeginLibraryItem "/library/global_nav.lbi" --><!-- #EndLibraryItem -->
+
+    <header class="header_03">
+      <div class="nl-login-title">
+        <div class="h-left">
+          <a class="sb-back" href="javascript:history.back(-1)" title="返回"></a>
+        </div>
+        <span style="text-align:center">系统提示</span>
+      </div>
+    </header>
+
+
+
+    <div data-val="{$auto_redirect}" class="tishimain">{$message.content}</div>
+    {if $message.url_info}
+    <div class="tishi">
+             {foreach from=$message.url_info key=info item=url}
+                <a  href="{$url}"><span>{$info}(<p style="display:inline" id="auto_href">3</p>秒自动跳转)</span></a>
+             {/foreach}
+
+
+
+    </div>
+    {/if}
+
+
+</body>
+<script>
+      var auto_redirect="{$auto_redirect}";
+      if(auto_redirect){
+        delayURL();
+      }
+
+
+    function delayURL() {
+      var delay = document.getElementById("auto_href").innerHTML;
+      var t = setTimeout("delayURL()", 1000);
+      if (delay > 0) {
+          delay--;
+          document.getElementById("auto_href").innerHTML = delay;
+      } else {
+          clearTimeout(t);
+          window.location.href = "{$url}";
+      }
+    }
+
+</script>
+</html>

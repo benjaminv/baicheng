@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>我的粉丝</title>
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="/themesmobile/dm299_com/css/public.css">
+    <link rel="stylesheet" type="text/css" href="/themesmobile/dm299_com/css/user.css">
+    <link href="themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+    <script type="text/javascript" src="/themesmobile/dm299_com/js/jquery.js"></script>
+    <script type="text/javascript" src="/themesmobile/dm299_com/js/jquery.more.js"></script>
+    <script type="text/javascript" src="/js/jquery.json.js"></script>
+    <script type="text/javascript" src="/js/transport.js"></script>
+    <script type="text/javascript" src="/js/common.js"></script>
+    <script type="text/javascript" src="/js/utils.js"></script>
+    <script type="text/javascript" src="/js/shopping_flow.js"></script>
+    <style type="text/css">
+        .url{
+            display: block;
+            width: 40px;
+            height: 50px;
+            background: url(../images/v-shop/back.png) no-repeat left center;
+        }
+        .li{
+            width: 25%;
+            float: left;
+            margin: auto;
+            border-bottom: 1px solid #eeeeee;
+            border-right: 1px solid #eeeeee;
+            margin-left: -1px;
+            padding-bottom: 15px;
+        }
+        .li em{
+            display: block;
+            width: 100%;
+            height: 24px;
+            text-align: center;
+            font-size: 13px;
+            line-height: 30px;
+            font-style: normal;
+        }
+        .reds{
+            color: #FF9900 !important;
+        }
+    </style>
+</head>
+<body lass="body_bj">
+<div class="top" >
+    <dl>
+        <dt><a href="javascript:history.back(-1)" class="url"></a></dt>
+        <dd>我的粉丝</dd>
+    </dl>
+</div>
+<div id="tbh5v0">
+    <ul class="scrip">
+        <li style="width: 49%;height: 24px;" class="li ">
+            <a href="v_user_fensi.php?act=first_level">
+                <em class="{if $display_mo eq 'first_level'}reds{/if}">一级粉丝</em>
+            </a>
+        </li>
+        <li style="width: 49%;height: 24px;" class="li">
+            <a href="v_user_fensi.php?act=second_level">
+                <em class="{if $display_mo eq 'second_level'}reds{/if}">二级粉丝</em> 
+            </a>
+        </li>
+    </ul>
+    <div >
+        {foreach from=$info item=inforamtion}
+        <table cellpadding="0" cellspacing="1"  width="100%" style="margin-top: 10px;font-size: 12px;">    
+            <tr >
+                <td rowspan="2" style="width: 56px;"><img src="{$inforamtion.headimg}" style="width: 40px;height: 40px;margin-left: 10px;"></td>
+                <td  style="text-align: left;width: 170px;">{$inforamtion.user_name}</td>
+                <td >{$inforamtion.reg_time}</td>
+            </tr >
+            <tr style="border-bottom: 1px solid #eeeeee;">
+                <td style="text-align: left;width: 170px;">预估收益：<span style="color: #FF9900;display: inline-block;">￥{$inforamtion.order_money}{if $inforamtion.order_jifen} +{$inforamtion.order_jifen}积分{/if}</span></td>
+                <td>{$inforamtion.order_mount}订单</td>
+            </tr>
+        </table>    
+        {/foreach}
+      
+    </div>
+    <div style="position: relative;margin-left: 50%;width: 120px;left: -40px; display: {if $pages >= $totalpage}block{else}none{/if}">已经到底了</div>
+    <div style="background-color: #F9F8FD;height: 38px;">
+         
+        <a href="v_user_fensi.php?act={$display_mo}&page={$prev}" class="prev" style="margin:auto;float: left;width: 50%;">
+            <img src="themesmobile/dm299_com/images/v-shop/arrow_left.png" style="width: 12px;height: 20px;margin-top: 6px;position: relative;left: 75%;">
+        </a>
+
+        <a href="{if $next > $totalpage}#{else}v_user_fensi.php?act={$display_mo}&page={$next}{/if}" style="float:left;width: 50%;"><img src="themesmobile/dm299_com/images/v-shop/arrow_right.png" style="width: 12px;height: 20px;margin-top: 6px;margin-left: 30px;margin-bottom: 10px;"></a>  
+    </div>
+</div>
+
+</body>
+
+</html>

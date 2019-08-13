@@ -1,0 +1,75 @@
+<!-- $Id: supplier_cash_order_info.htm 16854 2019-04-09 06:20:09Z sxc_shop $ -->
+
+{include file="pageheader.htm"}
+
+
+{if $send_fail}
+<ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
+<li style="border: 1px solid #CC0000; background: #FFFFCC; padding: 10px; margin-bottom: 5px;" >{$lang.mail_send_fail}</li>
+</ul>
+{/if}
+
+<div class="main-div">
+<form method="post" action="supplier_cash_order.php?act=save" name="theForm" onsubmit="return validate()">
+<table border="0" align="center">
+  <tr><th colspan="2">
+  <strong>当前可提现金额：{$supplier.commission_money}元</strong>
+  </th></tr>
+  <tr>
+    <td align="right">要提现的金额:</td>
+    <td><input name="tx_money" type="text" value="{$supplier.commission_money}" size="20"/>元</td>
+  </tr>
+  <tr>
+    <td align="right">收款方式:</td>
+    <td>
+      <label><input type="radio" name="pay_typ" value="0" checked>微信</label>
+      <label><input type="radio" name="pay_typ" value="1">支付宝</label>
+    </td>
+  </tr>
+  <tr class="alipay" style="display: none;">
+    <td align="right">收款账号:</td>
+    <td><input type="text" name="pay_number"></td>
+  </tr>
+  <tr class="alipay" style="display: none;">
+    <td align="right">收款姓名:</td>
+    <td><input type="text" name="pay_name"></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+      <input type="submit" value="{$lang.button_submit}" class="button">
+      <input type="reset" value="{$lang.button_reset}" class="button">
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+$("input:radio[name='pay_typ']").change(function(){
+    if(this.value==1){
+        $("tr.alipay").show();
+    }else{
+        $("tr.alipay").hide();
+    }
+});
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("tx_money",  "要提现金额");
+    return validator.passed();
+}
+
+onload = function() {
+    // 开始检查订单
+    startCheckOrder();
+}
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

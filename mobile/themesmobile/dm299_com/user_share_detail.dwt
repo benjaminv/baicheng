@@ -1,0 +1,67 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>{$page_title}</title>
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/public.css"/>
+<link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/index.css"/>
+<script type="text/javascript" src="themesmobile/dm299_com/js/TouchSlide.1.1.js"></script>
+<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+</head>
+<body>
+<style>
+    .marker {
+        font-size:14px;
+        color:#333;
+        line-height:1.5;
+    }
+    .marker em{
+        color:rgba(22, 155, 213, 1);
+    }
+    .gzBtn{
+        position:absolute;
+        display:block;
+        padding:0 10px;
+        border:1px solid rgba(22, 155, 213, 1);
+        color:rgba(22, 155, 213, 1);
+        font-size:14px;
+        right:20px;
+        top:0;
+    }
+</style>
+
+  <link href="themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+  <div class="top">
+      <dl>
+          <dt><a href="javascript:history.back(-1)"></a></dt>
+          <dd>我的推广海报</dd>
+      </dl>
+  </div>
+  <div   style="position:relative;">
+      <img src="/mobile/themesmobile/dm299_com/images/timg.gif" width="100%" id="img_detail"/>
+  </div>
+
+  <div id="u28" class="ax_default paragraph" style="position:relative;margin-top:1rem;margin-bottom:20px;">
+      <span style="display:block;font-size:14px;color:#333;font-weight:bold;text-align: center;margin-bottom:10px;">邀好友赚佣金</span>
+      <div id="u28_text" class="text " style="text-align: center;">
+          <span class="marker"><em>●</em>长按图片 —</span>
+          <span class="marker"><em>●</em>发送给朋友&nbsp; —</span>
+          <span class="marker"><em>●</em>朋友注册并下单</span>
+      </div>
+      <a href="user_share.php?act=rule" class="gzBtn">活动规则</a>
+  </div>
+  <script>
+      var id={$index};
+      $.post("user_share.php?act=img_detail",{id:id},function(result){
+          if(result.error ==0)
+          {
+              $("#img_detail").attr('src',result.dat);
+          }
+      },"json");
+  </script>
+</body>
+</html>

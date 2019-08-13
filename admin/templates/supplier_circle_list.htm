@@ -1,0 +1,61 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+<!-- 供货商搜索 -->
+
+<form method="post" action="" name="listForm">
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>店铺ID</th>
+                <th>店铺名称</th>
+                <th>店铺类型</th>
+				<th>店铺地址</th>
+                <th>操作</th>
+            </tr>
+            {foreach from=$supplier_list item=supplier}
+            <tr>
+                <td>{$supplier.id} </td>
+                <td class="first-cell" style="padding-left:10px;" >{$supplier.supplier_info.supplier_name}</td>
+                <td>
+					{if $supplier.supplier_info.is_ipc_shopping == 0}
+					美容院
+					{elseif $supplier.supplier_info.is_ipc_shopping == 1}
+					异业店铺
+					{elseif $supplier.supplier_info.is_ipc_shopping == 2}
+					技师
+					{else}
+					医院/门诊
+					{/if}
+				</td>
+                <td>{$supplier.supplier_info.province}&nbsp;&nbsp;{$supplier.supplier_info.city}&nbsp;&nbsp;{$supplier.supplier_info.district}&nbsp;&nbsp;{$supplier.supplier_info.address}&nbsp;&nbsp; </td>
+                <td align="center">
+				 <a onclick="if(confirm('是否移除该商圈？')==false)return false;" href="supplier.php?act=supplier_circle_del&id={$supplier.id}&circle_id={$supplier.circle_id}" title="移除">移除</a>
+				</td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>&nbsp;</td>
+                <td align="right" nowrap="true">
+                    {include file="page.htm"}
+                </td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+
+<script type="text/javascript" language="javascript">
+    
+</script>
+{include file="pagefooter.htm"}
+{/if}

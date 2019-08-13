@@ -1,0 +1,66 @@
+<!-- $Id: goods_batch_add.htm 16544 2009-08-13 07:55:57Z liuhui $ -->
+{include file="pageheader.htm"}
+<link href="styles/zTree/zTreeStyle.css" rel="stylesheet" type="text/css" />
+{insert_scripts files='jquery-1.6.2.min.js,jquery.ztree.all-3.5.min.js,category_selecter.js'}
+<div class="main-div">
+<form action="users_import.php?act=upload" method="post" enctype="multipart/form-data" name="theForm" onsubmit="return formValidate()">
+<table cellspacing="1" cellpadding="3" width="100%">
+  
+  <tr>
+    <td class="label">所属店铺</td>
+    <td>
+		<select name="supplier_id" id="supplier_id">
+			{foreach from=$supplier_list item=list}
+				<option value="{$list.supplier_id}">{$list.supplier_name}</option>
+			{/foreach}
+		</select>
+    </td>
+  </tr>
+  
+  <tr>
+    <td class="label">
+      <a href="javascript:showNotice('noticeFile');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>
+      导入文件上传</td>
+    <td><input name="file" type="file" size="40">
+    <br/>
+      <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeFile">CSV文件下载后，如果第一行为空行，请删除第一行，确保标题栏为第一行</span></td>
+  </tr>
+  
+  <tr>
+    <td>&nbsp;</td>
+    <td><a href="users_import.php?act=download">下载导入模板</a></td>
+  </tr>
+  
+  <tr align="center">
+    <td colspan="2"><input name="submit" type="submit" id="submit" value="{$lang.button_submit}" class="button" /></td>
+  </tr>
+</table>
+
+</form>
+
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+    
+    /**
+     * 检查输入是否完整
+     */
+    function formValidate()
+    {
+        if ($("[name='file']").val() == '')
+    	{
+        	alert('请上传文件');
+        	return false;
+    	}
+       
+        return true;
+    }
+	
+</script>
+
+
+
+{/literal}
+
+{include file="pagefooter.htm"}

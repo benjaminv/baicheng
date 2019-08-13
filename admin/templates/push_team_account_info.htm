@@ -1,0 +1,52 @@
+<!-- $Id: supplier_account_info.htm 14216 2019-04-10 02:27:21Z freely $ -->
+{include file="pageheader.htm"}
+
+<div class="main-div">
+<form method="post" action="push_team_account_log.php" name="theForm" onsubmit="return validate()">
+<table cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+    <td class="label">地推团队佣金变动原因：</td>
+    <td><textarea  name="change_desc" cols="60" rows="4"></textarea></td>
+  </tr>
+  <tr>
+    <td class="label">地推团队佣金：</td>
+    <td><select name="add_sub_commission_money" id="add_sub_commission_money">
+      <option value="1" selected="selected">增加</option>
+      <option value="-1">减少</option>
+    </select>
+    <input name="commission_money" type="text" id="commission_money" style="text-align:right" value="0" size="10" />
+    当前值：¥{$push_team_commission_money}</td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center">
+      <input type="submit" class="button" value="{$lang.button_submit}" />
+      <input type="reset" class="button" value="{$lang.button_reset}" />
+      <input type="hidden" name="act" value="insert" />
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("change_desc",  "请输入地推团队佣金变动原因");
+	validator.isNumber("commission_money", "地推团队佣金不是数值");
+    return validator.passed();
+}
+
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

@@ -1,0 +1,128 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{$page_title}</title>
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/public.css">
+    <link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/user.css">
+    <script type="text/javascript" async="" defer="" src="//piwik.lian-mei.com/linkall.js"></script><script src="https://hm.baidu.com/hm.js?06da1df901f42b748e925d65a0fe89fe"></script><script type="text/javascript" async="" defer="" src="//piwik.lian-mei.com/linkall.js"></script><script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+    <script type="text/javascript" src="themesmobile/dm299_com/js/jquery.more.js"></script>
+    <script type="text/javascript" src="js/jquery.json.js"></script><script type="text/javascript" src="js/transport.js"></script><script type="text/javascript" src="js/common.js"></script><script type="text/javascript" src="js/utils.js"></script><script type="text/javascript" src="js/shopping_flow.js"></script></head>
+<body class="body_bj">
+
+<script type="text/javascript" src="themesmobile/dm299_com/js/mobile.js"></script>
+<header>
+    <div class="tab_nav" style="border-bottom: 1px solid #DFDFDF;">
+        <div class="header">
+            <div class="h-mid" style="width:100%;">信息绑定</div>
+        </div>
+    </div>
+</header>
+<div id="tbh5v0">
+    <div class="Personal">
+        <div id="tbh5v0">
+            <div class="innercontent1">
+                <form method="post" action="user.php" id="edit_profile" enctype="multipart/form-data">
+
+                    <div class="name">
+                        <label for="extend_field_5"> <span>手机</span>
+                            <input type="text" name="mobile_phone" value="" id="mobile_phone" placeholder="请输入手机号码" class="c-f-text" style="height:32px;line-height:32px;">
+                        </label>
+                    </div>
+                    <div class="name" >
+                        <span>验证码</span>
+                        <input type="text" name="verifycode" id="verifycode" oninput="if(value.length>6)value=value.slice(0,6)" maxlength='6' value="" placeholder="验证码" class="c-f-text" style="width:65px;height:32px;line-height:32px;">
+			<input id="zphone" type="button" value="获取验证码 " class="zphone" style="height:32px;margin-top:9px;float:right;border-radius: 10px;border: #be3233 1px solid;">
+		    </div>
+
+                    <div class="field submit-btn">
+                        <button type="button" class="btn_big1">确认</button>
+                        <input type="hidden" name="parent_id" id="parent_id" value="{$parent_id}" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(function(){
+	
+	$('#zphone').click(function(){
+		var mobile = $('#mobile_phone').val();
+		var that = $(this);
+		if(!(/^1[3456789]\d{9}$/.test(mobile))){ 
+			alert("手机号码有误，请重填");  
+			return false; 
+		} 
+		$.ajax({
+		    url:"sms.php?step=weixin_login",
+		    data:"mobile="+mobile,
+		    dataType:"json",
+		    type:'post',
+		    success: function(data){
+		     
+		      if(data.error == 0){
+			countdown(that,'获取验证码');
+		      }else{
+			 alert(data.message);
+		      }
+		    }
+		});
+	});
+	var wait = 60;
+	function countdown(obj, msg) {
+		obj = $(obj);
+		if (wait == 0) {
+			obj.removeAttr("disabled");
+			obj.val(msg);
+			wait = 60;
+		} else {
+			if (msg == undefined || msg == null) {
+				msg = obj.val();
+			}
+			obj.attr("disabled", "disabled");
+			obj.val(wait + "秒后重新获取");
+			wait--;
+			setTimeout(function() {
+				countdown(obj, msg)
+			}, 1000)
+		}
+	}
+
+	$('.btn_big1').click(function(){
+		var mobile_phone= $("#mobile_phone").val();
+		var parent_id   = $("#parent_id").val();
+		var verifycode = $("#verifycode").val();
+		if(!(/^1[3456789]\d{9}$/.test(mobile_phone))){
+			alert("手机号码有误");  
+			return false; 
+		}
+		if(verifycode == ""){
+			alert("请填写验证码");  
+			return false; 
+		}
+		$.ajax({
+		    url:"affiliate_weixin_login.php?act=checkmobile",
+		    data:{mobile_phone:mobile_phone,verifycode:verifycode},
+		    dataType:"json",
+		    type:'post',
+		    success: function(data){
+		      if(data.error == 0){
+			var url="weixin_login.php?bind=1&user_id="+parent_id+"&erweima_type=1&mobile_phone="+mobile_phone;
+			window.location.href = url;
+		      }else{
+			 alert(data.message);  
+			 return false; 
+		      }
+		    }
+		});
+	});
+	
+});
+  
+</script>
+</body>
+</html>

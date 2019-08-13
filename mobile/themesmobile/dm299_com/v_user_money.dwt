@@ -1,0 +1,90 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>账户明细 </title>
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" type="text/css" href="/themesmobile/dm299_com/css/public.css">
+<link rel="stylesheet" type="text/css" href="/themesmobile/dm299_com/css/user.css">
+<link href="../themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/themesmobile/dm299_com/js/jquery.js"></script>
+<script type="text/javascript" src="/themesmobile/dm299_com/js/jquery.more.js"></script>
+<script type="text/javascript" src="/js/jquery.json.js"></script>
+<script type="text/javascript" src="/js/transport.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/utils.js"></script>
+<script type="text/javascript" src="/js/shopping_flow.js"></script>
+
+</head>
+<body class="body_bj">
+<div class="top" style="height: 40px;overflow: hidden;display: {if $display_mo eq 'look_jifen'}none{/if}">
+    <dl>
+        <dt>
+          <a href="javascript:history.back(-1)" class="url"></a>
+        </dt>
+        <dd>账户明细</dd>
+    </dl>
+</div>
+<div id="tbh5v0" style="display: {if $display_mo eq 'look_jifen'}none{/if}">
+    <h2 class="vc_title" style="margin-bottom: 20px;">账户余额：<strong>￥{$moeny_jifen}</strong></h2>	
+		<table >
+			{foreach from=$info item=inforamtion}
+			<tr>
+				<td style="float:left;width:7%;overflow:hidden;">
+					<img src="./images/step_point.png" style="height: 100px;width: 20px;">
+				</td>
+				<td style="float:left;width: 93%;height: 30px; margin-top: 10px;overflow:hidden;">{$inforamtion.add_dec},{$inforamtion.user_money}</td>
+				<td style="float:left;width: 93%;height: 30px;overflow:hidden; ">{$inforamtion.change_time}</td>
+			    <td style="float:left;width: 93%;height: 30px;overflow:hidden; border-bottom: 1px solid #ccc;">{$inforamtion.change_desc}</td>
+			</tr>
+			{/foreach}
+		</table>
+		<div style="position: relative;margin-left: 50%;width: 120px;left: -40px; display: {if $pages eq $totalpage}block{else}none{/if}">已经到底了</div>
+	<div style="background-color: #F9F8FD;height: 38px;">
+		<a href="v_user_money.php?act=look_money&page={$prev}" class="prev" style="margin:auto;float: left;width: 50%;">
+            <img src="themesmobile/dm299_com/images/v-shop/arrow_left.png" style="width: 12px;height: 20px;margin-top: 6px;position: relative;left: 75%;">
+        </a>
+
+        <a href="{if $next > $totalpage}#{else}v_user_money.php?act=look_money&page={$next}{/if}" style="float:left;width: 50%;"><img src="themesmobile/dm299_com/images/v-shop/arrow_right.png" style="width: 12px;height: 20px;margin-top: 6px;margin-left: 30px; margin-bottom: 10px;"></a>  
+    </div>
+	</div>
+</div>
+<div class="top" style="height: 40px;overflow: hidden;display: {if $display_mo eq 'look_money'}none{/if}">
+    <dl>
+        <dt>
+          <a href="javascript:history.back(-1)" class="url"></a>
+        </dt>
+        <dd>积分明细</dd>
+    </dl>
+</div>
+<div  id="tbh5v0" style="display: {if $display_mo eq 'look_money'}none{/if}">
+    <h2 class="vc_title" style="margin-bottom: 20px;">积分余额：<strong>{$moeny_jifen}</strong></h2>
+		<table>
+			{foreach from=$info item=inforamtion}
+			<tr>
+				<td style="float:left;width:7%; overflow:hidden;">
+					<img src="./images/step_point.png" style="height: 100px;width: 20px;">
+				</td>
+				<td style="float:left;width: 93%;height: 30px; margin-top: 10px;overflow:hidden;">{$inforamtion.add_dec},{$inforamtion.pay_points}</td>
+				<td style="float:left;width: 93%;height: 30px;overflow:hidden; ">{$inforamtion.change_time}</td>
+			    <td style="float:left;width: 93%;height: 30px;overflow:hidden; border-bottom: 1px solid #ccc;">{$inforamtion.change_desc}</td>
+			</tr>
+			{/foreach}
+		</table> 
+		<div style="position: relative;margin-left: 50%;width: 120px;left: -40px; display: {if $pages >= $totalpage}block{else}none{/if}">已经到底了</div>
+		<div style="background-color: #F9F8FD;height: 38px;">
+			
+	        <a href="v_user_money.php?act=look_jifen&page={$prev}" class="prev" style="margin:auto;float: left;width: 50%;">
+	            <img src="themesmobile/dm299_com/images/v-shop/arrow_left.png" style="width: 12px;height: 20px;margin-top: 6px;position: relative;left: 75%;">
+	        </a>
+
+	        <a href="{if $next > $totalpage}#{else}v_user_money.php?act=look_jifen&page={$next}{/if}" style="float:left;width: 50%;"><img src="themesmobile/dm299_com/images/v-shop/arrow_right.png" style="width: 12px;height: 20px;margin-top: 6px;margin-left: 30px;margin-bottom: 10px;"></a>  
+	    </div>
+	</div> 
+	
+</div>
+
+</body>
+</html>

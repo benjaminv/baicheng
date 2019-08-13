@@ -1,0 +1,1 @@
+<input type="hidden" id="stock_id" value="{$supplier_stock}" />

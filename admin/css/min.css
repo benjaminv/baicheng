@@ -1,0 +1,63 @@
+@charset "utf-8";
+
+/* CSS Document */
+
+*{word-wrap:break-word;}
+
+
+
+ul,ol,dl{list-style-type:none;}
+
+html{-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;}
+
+address,caption,cite,code,dfn,em,th,var{font-style:normal;font-weight:400;}
+
+input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;}
+
+input,button{overflow: visible;vertical-align:middle;outline:none;border:0;}
+
+body,th,td,button,input,select,textarea{font-family:"Microsoft Yahei","Hiragino Sans GB","Helvetica Neue",Helvetica,tahoma,arial,Verdana,sans-serif,"WenQuanYi Micro Hei","\5B8B\4F53";font-size:14px;color: #666;-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing:grayscale;}
+
+body{line-height:1.5;background-color:#fff;}
+
+h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;}
+
+a{text-decoration:none;cursor: pointer;}
+
+a:hover{outline:none;}
+
+a.ie6:hover{zoom:1;}
+
+a:focus{outline:none;}
+
+a:hover,a:active{outline:none}:focus{outline:none;}
+
+sub,sup{vertical-align:baseline;}
+
+button,input[type="button"], input[type="submit"] {line-height:normal !important;}
+
+/*img*/
+
+img{border:0;vertical-align:middle;}
+
+a img,img{-ms-interpolation-mode:bicubic;}
+
+select {
+
+	border:0;
+
+	appearance:none;
+
+	-moz-appearance:none;
+
+	-webkit-appearance:none;
+
+}
+
+select::-ms-expand { display: none; }
+
+.fl{float:left;}
+
+.fr{float:right;}
+
+.clearfix{clear:both;}

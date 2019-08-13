@@ -1,0 +1,69 @@
+<!-- $Id: account_list.htm 14928 2008-10-06 09:25:48Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+<div class="form-div">
+  <strong>地推团队现有佣金：</strong>{$push_team_commission_money}
+</div>
+
+<form method="post" action="" name="listForm">
+<div class="list-div" id="listDiv">
+{/if}
+
+  <table cellpadding="3" cellspacing="1">
+    <tr>
+      <th width="20%">变化时间</th>
+      <th width="30%">备注</th>
+      <th>佣金</th>
+    </tr>
+    {foreach from=$account_list item=account}
+    <tr>
+      <td>{$account.change_time}</td>
+      <td>{$account.change_desc|escape:html}</td>
+      <td align="right">
+        {if $account.commission_money gt 0}
+          <span style="color:#0000FF">+{$account.commission_money}</span>
+        {elseif $account.commission_money lt 0}
+          <span style="color:#FF0000">{$account.commission_money}</span>
+        {else}
+          {$account.commission_money}
+        {/if}
+      </td>
+    </tr>
+    {foreachelse}
+    <tr><td class="no-records" colspan="6">{$lang.no_records}</td></tr>
+    {/foreach}
+  </table>
+<table id="page-table" cellspacing="0">
+  <tr>
+    <td align="right" nowrap="true">
+    {include file="page.htm"}
+    </td>
+  </tr>
+</table>
+
+{if $full_page}
+</div>
+</form>
+
+<script type="text/javascript" language="javascript">
+  <!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+      // 开始检查订单
+      startCheckOrder();
+  }
+  {/literal}
+  //-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

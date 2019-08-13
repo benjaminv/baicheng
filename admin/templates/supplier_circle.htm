@@ -1,0 +1,52 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+<!-- 供货商搜索 -->
+
+<form method="post" action="" name="listForm">
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>商圈ID</th>
+                <th>商圈名称</th>
+                <th>商圈备注</th>
+                <th>操作</th>
+            </tr>
+            {foreach from=$supplier_list item=supplier}
+            <tr>
+                <td>{$supplier.id} </td>
+                <td class="first-cell" style="padding-left:10px;" >{$supplier.name}</td>
+                <td>{$supplier.remark} </td>
+                
+                <td align="center">
+				 <a href="supplier.php?act=circle_info&id={$supplier.id}" title="编辑">编辑</a>
+                   &nbsp;&nbsp;
+					 <a href="supplier.php?act=supplier_circle_list&circle_id={$supplier.id}" title="商家列表">商家列表</a>
+				</td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>&nbsp;</td>
+                <td align="right" nowrap="true">
+                    {include file="page.htm"}
+                </td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+
+<script type="text/javascript" language="javascript">
+    
+</script>
+{include file="pagefooter.htm"}
+{/if}

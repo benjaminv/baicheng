@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+{include file='html_header.htm'}
+</head>
+<style type="text/css">
+  .label{
+    width: 70px;
+  }
+</style>
+<body>
+<div id='container'>
+    <header id="header" class="header">
+      <h1>会员信息</h1>
+        <a href="javascript:history.back(-1)" class="back">返回</a>
+          <a onclick="refresh();" class="clear">刷新</a>
+    </header>
+     {include file='menu_list.htm'}
+<section>
+ <div class="order_con" id="con_order_manage_1">
+          <div class="order_pd"  id="con_type_1">
+            <div class="order">
+              <ul class="order_list">
+                <li>
+                  <table cellpadding="0" cellspacing="1"  width="100%">
+                    {foreach from=$user_info item=inforamtion}
+                    <tr >
+                      <td rowspan="2" style="width: 60px;"><img src="{$inforamtion.headimg}" style="width: 40px;height: 40px;"></td>
+                      <td  style="text-align: left;">{$inforamtion.user_name}</td>
+                      <td >{$inforamtion.pay_points}{if $inforamtion.differ == 1}积分{/if}</td>
+                    </tr >
+                     <tr style="border-bottom: 1px solid #000;">
+                      <td style="text-align: left;">{$inforamtion.mobile_phone}</td>
+                      <td>{ if $inforamtion.differ eq 1}{if $inforamtion.is_old ==1}门店自拓{else}联美推广{/if}{elseif $inforamtion.differ == 2}异店会员{/if}</td>
+                    </tr>
+                    {/foreach}
+                  </table>
+                </li>
+              </ul>
+                  <p class="page">
+                    <a href="user_list.php?page={$prev}" class="prev">上一页</a>
+                    <span>{$page}/{$totalpage}</span>
+                    <a href="{if $next > $totalpage}#{else}user_list.php?page={$next}{/if}">下一页</a>
+                  </p>
+            </div>
+          </div>
+        </div> 
+        </section>         
+</div>
+</body>

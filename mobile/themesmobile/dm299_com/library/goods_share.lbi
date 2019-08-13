@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/css/weui.css">
+<style>
+#cover { position:fixed;top:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:none; z-index:99999999 ;float:left;};
+.cover-poster{width:86%;margin:2% 7%;background:#fff;float:left;height:96%;}
+.cover-poster img{width:100%;}
+</style>
+<div class="right">
+      <a class="poster-show">
+	    <div id="pro_share" class="share" style="z-index: 1"></div>
+      </a>
+</div>
+
+<div id="loadingToast" style="display:none;">
+	<div class="weui-mask_transparent"></div>
+	<div class="weui-toast">
+	    <i class="weui-loading weui-icon_toast"></i>
+	    <p class="weui-toast__content">请求中</p>
+	</div>
+</div>
+
+<div id="toast" style="display: none;">
+	<div class="weui-mask_transparent"></div>
+	<div class="weui-toast">
+	    <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+	    <p class="weui-toast__content" id="toast_content">已完成</p>
+	</div>
+</div>
+
+<div id="cover">
+	<div class="cover-poster" style="width:86%;margin:2% 7%;height:100%;float:left;overflow:scroll;text-align: center;">
+		<img id="cover_post" src="" style=" min-width: 260px;height:80%;max-width:100%;width:auto;border-radius: 10px;">
+		<div style="width:90%;margin:2% 5%;height:16%;background:#fff;max-height: 80px;border-radius: 10px;float:left;">
+			<a href="javascript:;" class="poster-save weui-btn weui-btn_primary" style="background: #ff9c00;color:#fff;margin-top:10px;">关闭</a>
+			<span style="font-size: 12px;color: #999;">保存图片到手机相册后,将图片分享到您的圈子</span>
+		</div>
+	</div>
+</div>
+
+<script>
+	$('.poster-show').on('click',function(){
+		$('#loadingToast').fadeIn(100);
+		$.ajax({
+			url:'poster.php',
+			data:{type:'goods',goods_id:'{$goods.goods_id}'},
+			dataType:"json",
+			type:'post',
+			success: function(data){
+				if(data.code == 0){
+					alert(data.msg);
+				}else{
+					$('#cover_post').attr('src',data.post);
+					$('#cover').show();
+				}
+				$('#loadingToast').fadeOut(100);
+			}
+		});
+		
+	});
+
+	$('.poster-save').on('click',function(e){
+		e.stopPropagation()
+		$('#cover').hide();
+	});
+</script>

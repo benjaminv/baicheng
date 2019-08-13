@@ -1,0 +1,187 @@
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+{insert_scripts files='utils.js'}
+<div class="headerLayout">
+    <div class="headerCon ">
+      <div class="header-extra">
+   	    <div class="panel-heading">
+            <div class="more">
+                <div class="progress">
+                    <div class="progress-wrap">
+                        <div class="progress-item passed">
+                            <div class="number">1</div>
+                            <div class="progress-desc">入驻须知</div>
+                        </div>
+                    </div>
+                    <div class="progress-wrap">
+                        <div class="progress-item passed">
+                            <div class="number">2</div>
+                            <div class="progress-desc">个人信息认证</div>
+                        </div>
+                    </div>
+                    <div class="progress-wrap">
+                        <div class="progress-item ongoing">
+                            <div class="number">3</div>
+                            <div class="progress-desc">店铺信息认证</div>
+                        </div>
+                    </div>
+                    <div class="progress-wrap">
+                        <div class="progress-item tobe">
+                            <div class="number"><i class="tick"></i></div>
+                            <div class="progress-desc">等待审核</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+      </div>
+    </div>
+  </div>
+<div class="store-joinin-apply">
+  <div class="main">
+    <div class="addressmone">
+    <span align="center" >店铺经营信息</span>
+      <form id="form_store_info" name="form_company_info" action="apply.php" method="post" enctype="multipart/form-data" onSubmit="return supplier_Reg()">
+      
+       
+
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0" class="all">
+      <tbody>
+        <tr>
+
+        	<th align="right" nowrap><i>*</i>店铺名称：</th>
+        	<td><input name="supplier_name" type="text" value="{$supplier.supplier_name}" style="height:20px;" class="w200">
+        	 <p  style="float:right;color:#888585">请根据您所经营的内容认真选择店铺名称，店铺名称注册后不可修改，请认真填写。</p>
+        	</td>
+        </tr>
+        <tr>
+          <th align="right" nowrap><i>*</i>店铺类型：</th>
+          <td>
+	    <select class="ipc-shopping w200" style="height:24px;"  name="is_ipc_shopping">
+		<option value="0" {if $supplier.is_ipc_shopping eq 0}selected{/if}>美容院</option>
+		<option value="1" {if $supplier.is_ipc_shopping eq 1}selected{/if}>异业店铺</option>
+		{if !$supplier.type_id}
+		<option value="2" {if $supplier.is_ipc_shopping eq 2}selected{/if}>技师</option>
+		{/if}
+		<option value="3" {if $supplier.is_ipc_shopping eq 3}selected{/if}>医院/门诊</option>
+	    </select>
+	    <p style="color:#888585">请根据您所经营的内容认真选择店铺分类，注册后商家不可自行修改。</p></td>
+        </tr>
+
+        <tr>
+
+                	<th align="right" nowrap><i>*</i>店铺Logo：</th>
+                	<td>
+                	<input name="logo" type="file">
+                	{if $supplier.logo}
+                        				<img src="/{$supplier.logo}" width=50 height=50>&nbsp;&nbsp;
+                     {/if}
+                	 <p  style="color:#888585">图片大小限制10M。</p>
+                	</td>
+                </tr>
+
+         <tr>
+
+                 	<th align="right" nowrap><i>*</i>店铺描述：</th>
+                 	<td>
+                 	<textarea name="description">{$supplier.description} </textarea>
+                 	</td>
+                 </tr>
+
+                 <tr class="techcian-block" {if $supplier.is_ipc_shopping neq 2}style="display:none;"{/if}>
+                       <th align="right" nowrap>个人介绍：</th>
+                                 	<td>
+                                 	<textarea name="opus_remark" placeholder="请输入个人介绍,不超过300字">{$supplier.opus_remark}</textarea>
+                                 	</td>
+                 </tr>
+
+                 <tr class="techcian-block" {if $supplier.is_ipc_shopping neq 2}style="display:none;"{/if}>
+                     <th align="right" nowrap>个人艺术照：</th>
+                                     	<td>
+                                     	<input name="technican_bodyimg" type="file">
+                                        			{if $supplier.technican_bodyimg}
+                                        				<img src="../../data/supplier/{$supplier.technican_bodyimg}" width=50 height=50>&nbsp;&nbsp;
+                                        			{/if}
+                                     	</td>
+
+                 </tr>
+
+        </tbody>
+        </table>
+
+        <!--
+	<ul>
+	<li class="techcian-block" {if $supplier.is_ipc_shopping neq 2}style="display:none;"{/if}>
+		<span>个人介绍：</span>
+		<em>
+			<textarea name="opus_remark" placeholder="请输入个人介绍,不超过300字">{$supplier.opus_remark}</textarea>
+		</em>
+	</li>
+	
+	<li class="techcian-block" {if $supplier.is_ipc_shopping neq 2}style="display:none;"{/if}>
+		<span>个人艺术照：</span>
+		<em>
+			<input name="technican_bodyimg" type="file">
+			{if $supplier.technican_bodyimg}
+				<img src="../../data/supplier/{$supplier.technican_bodyimg}" width=50 height=50>&nbsp;&nbsp;
+			{/if}
+		</em>
+	</li>
+	</ul>
+	-->
+
+
+      <input type="hidden" name="shownum" value="3">
+      <input type="hidden" name="do" value="1">
+      <div class="bottom"><input type="button" value="上一步" class="btn" {if $supplier.guimo}onclick="top.location.href='apply.php?shownum=2'"{else}onclick="top.location.href='apply.php?shownum=1'"{/if}><input type="submit" value="下一步" class="btn"></div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+$(function(){
+	$('.ipc-shopping').on('change',function(){
+		var ipc_shopping = $(this).val();
+		if(ipc_shopping == 2){
+			$('.techcian-block').show();
+		}else{
+			$('.techcian-block').hide();
+		}
+	});
+});
+function supplier_Reg()
+{
+	var frm = document.forms['form_company_info'];
+	//var rank_id = frm.elements['rank_id'].value;
+	var supplier_name = frm.elements['supplier_name'] ? Utils.trim(frm.elements['supplier_name'].value) : '';
+	var desc = frm.elements['desc'] ? Utils.trim(frm.elements['desc'].value) : '';
+
+
+	if (supplier_name.length == 0)
+	{
+		msg += "店铺名称不能为空！" + '\n';
+	}
+
+	if (supplier_name.length == 0)
+    {
+    	msg += "店铺描述不能为空！" + '\n';
+    }
+	// if (rank_id.length == 0 || rank_id=='0')
+  // {
+  //  msg += "店铺等级不能为空！" + '\n';
+  // }
+	if (type_id.length == 0 || type_id=='0')
+	{
+		msg += "店铺分类不能为空！" + '\n';
+	}
+	if (msg.length > 0)
+	{
+		alert(msg);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+</script>

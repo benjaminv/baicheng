@@ -1,0 +1,152 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="minimal-ui=yes,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>技师作品</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="icon" href="animated_favicon.gif" type="image/gif" />
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/css/weui.css">
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/css/weuix.css"/>
+
+<script src="themesmobile/dm299_com/assets/js/zepto.min.js"></script>
+<script src="themesmobile/dm299_com/assets/js/swipe.js"></script>
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<style>
+  .slide{height:270px;}
+  .opus-desc{color: #666666;font-size: 16px;-webkit-line-clamp: 3;}
+</style>
+</head>
+<body>
+<div class="weui-header bg-blue"> 
+  <div class="weui-header-left" onclick="javascript:history.back(-1)"> <a class="icon icon-109 f-white">返回</a>  </div>
+   <h1 class="weui-header-title">技师作品</h1>
+</div>
+<div  style="width:98%;margin:1%;float:left;">
+    <div id="opus_list">
+	    {foreach from=$opus_list item=list}
+		<div style="margin-bottom:5px;" >
+		    <div class="slide" id="slide_{$list.id}">
+			<ul>
+			    {foreach from=$list.opus_img item=opus}
+				    <li>
+					<a href="javascript:;">
+					    <img src='{$opus}' alt="作品图片">
+					</a>
+				    </li>
+			    {/foreach}
+			</ul>
+			<div class="dot">
+			  {foreach from=$list.opus_img item=opus}
+			    <span></span>
+			  {/foreach}
+			</div>
+		    </div>
+		    <div class="weui-panel__bd ">
+			    <div class="weui-media-box weui-media-box_text">
+				<!--<h4 class="weui-media-box__title">{$list.opus_title}</h4>-->
+				<p class="weui-media-box__desc opus-desc">{$list.opus_desc}</p>
+			    </div>
+		    </div>
+		</div>
+		    <script>
+			$('#slide_{$list.id}').swipeSlide({
+				autoSwipe:true,//自动切换默认是
+				speed:3000,//速度默认4000
+				continuousScroll:true,//默认否
+				transitionType:'cubic-bezier(0.22, 0.69, 0.72, 0.88)',//过渡动画linear/ease/ease-in/ease-out/ease-in-out/cubic-bezier
+				lazyLoad:true,//懒加载默认否
+				firstCallback : function(i,sum,me){
+				    me.find('.dot').children().first().addClass('cur');
+				},
+				callback : function(i,sum,me){
+				    me.find('.dot').children().eq(i).addClass('cur').siblings().removeClass('cur');
+				}
+			 });
+		    </script>
+	    {/foreach}
+    </div>
+</div>
+
+<script src="themesmobile/dm299_com/assets/js/zepto.weui.js"></script>
+<script>
+$(function(){
+
+	
+
+
+	 var page = 1;
+	 var flag = true;//是否可以加载数据
+	 $(window).scroll(function(){
+		var winH = $(window).height(); //页面可视区域高度  
+		var scrollTop = $(window).scrollTop();//获取滚动条的位置
+		var pageH = $(document).height(); //页面总高度
+		if(winH + scrollTop >= pageH){
+			if(flag){
+				//防止重复加载请求
+				flag = false;
+				page++;
+				ajax_search_opus();
+			}
+		}
+		
+	 });
+
+	 function ajax_search_opus(){
+		$.ajax({
+			url:"technican.php?act=ajax_search_opus&suppId={$suppId}",
+			data:{page:page},
+			dataType:"json",
+			type:'post',
+			success: function(data){
+			    if(data.length==0){
+				 $.toast.prototype.defaults.duration=2000;//1秒
+				 $.toast("没有更多了",'text');
+				 
+			    }else{
+				flag = true;
+				var html = createHtml(data);
+				$('#opus_list').append(html);
+			    }
+			}
+		});
+	 }
+
+	 function createHtml(res){
+		html = "";
+		$.each(res,function(i,j){
+			html += '<div style="margin-bottom:5px;"><div class="slide" id="slide_'+j.id+'"><ul>';
+			$.each(j.opus_img,function(m,n){
+				html += '<li><a href="javascript:;"><img src="'+n+'" alt="作品图片"></a></li>';
+			});
+			html += '</ul><div class="dot">';
+			$.each(j.opus_img,function(m,n){
+				html += '<span></span>';
+			});
+			html += '</div></div><div class="weui-panel__bd "><div class="weui-media-box weui-media-box_text"><p class="weui-media-box__desc opus-desc">'+j.opus_desc+'</p></div></div></div>';
+			html += "<script>$('#slide_"+j.id+"').swipeSlide({";
+			html += "autoSwipe:true,";
+			html += "speed:3000,";			
+			html += "continuousScroll:true,";			
+			html += "transitionType:'cubic-bezier(0.22, 0.69, 0.72, 0.88)',";		
+			html += "lazyLoad:true,";			
+			html += "firstCallback : function(i,sum,me){";			
+			html += "me.find('.dot').children().first().addClass('cur');";			    
+			html += "},";			
+			html += "callback : function(i,sum,me){";			
+			html += "me.find('.dot').children().eq(i).addClass('cur').siblings().removeClass('cur');";			    
+			html += "}";			
+			html += "});";		 
+			html += "<\/script>";
+		});
+		return html;
+	 }
+})
+ 
+</script>
+</body>
+</html>

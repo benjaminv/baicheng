@@ -1,0 +1,189 @@
+{if $full_page eq 1}
+<!DOCTYPE html>
+<html>
+  <head>
+   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+   <link rel="stylesheet" href="../themesmobile/dm299_com/assets/css/weui.css">
+	<link rel="stylesheet" href="../themesmobile/dm299_com/assets/css/weuix.css">
+    {include file='html_header.htm'}
+	
+    <style>
+		.weui-cells{margin:4px 0px;}
+		a:hover {font-size: 14px;color: #B2B2B2;text-decoration: none;font-family: weui;}
+		a:link {font-family: weui;font-size: 14px;color: #B2B2B2;text-decoration: none;}
+		a:visit {font-family: weui;font-size: 14px;color: #B2B2B2;text-decoration: none;}
+		.weui-cell {padding: 10px 2px;}
+		.weui-dialog{top :20%;}
+	</style>
+  </head>
+  <body>
+    <div id='container'>
+      {/if}
+      {include file='page_header.htm'}
+      <section>
+        <div class="order_pd goods_pd"  id="con_order_manage_1">
+		<div href="javascript:;" class="weui-btn bg-blue scan-qrcode" style="width:100%;">扫码核销</div>
+		<!-- <div class="weui-search-bar" id="searchBar"> -->
+			<!-- <div class="weui-search-bar__form"> -->
+				<!-- <div class="weui-search-bar__box"> -->
+					<!-- <i class="weui-icon-search"></i> -->
+					<!-- <input class="weui-search-bar__input" id="searchInput" placeholder="请输入卡项编号" required="" type="search"> -->
+					<!-- <a href="javascript:" class="weui-icon-clear" id="searchClear"></a> -->
+				<!-- </div> -->
+				<!-- <label class="weui-search-bar__label" id="searchText" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);"> -->
+					<!-- <i class="weui-icon-search"></i> -->
+					<!-- <span>请输入卡项编号</span> -->
+				<!-- </label> -->
+			<!-- </div> -->
+			<!-- <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a> -->
+		<!-- </div> -->
+
+		{if $list}
+			{foreach from=$list item=item}
+			<div class="weui-panel__bd weui-cells">
+				<a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+					<div class="weui-media-box__bd">
+						<h4 class="weui-media-box__title item-order" attr-orderid='{$item.order_id}'>{$item.order_sn}</h4>
+						<p class="weui-media-box__desc">会员:{$item.user_name}</p>
+						<p class="weui-media-box__desc">项目:{$item.column_name}</p>
+					</div>
+					<div class="weui-media-box__bd">
+						<p class="weui-media-box__desc">次数:{$item.column_number}</p>
+						<p class="weui-media-box__desc">{$item.add_time}</p>
+					</div>
+				</a>
+			</div>
+			{/foreach}
+         
+            {include file='page.htm'}
+		{else}
+			<div style="text-align:center;margin-top:20px;">
+			没有查询到数据。
+			</div>
+		{/if}
+        </div>
+      </section>
+	<div id="toast" style="display: none;">
+        <div class="weui-mask_transparent"></div>
+        <div class="weui-toast">
+            <i class="weui-icon-success-no-circle weui-icon_toast"></i>
+            <p class="weui-toast__content" id="toast_content">已完成</p>
+        </div>
+    </div>
+
+	
+
+      {include file='page_footer.htm'}
+
+	<script src="../themesmobile/dm299_com/assets/js/zepto.min.js"></script>
+    <script src="../themesmobile/dm299_com/assets/js/zepto.weui.js"></script>
+	  <script>
+	  $(function(){
+		var scan_id = '{$order_id}';
+		var search = function() {
+			if(scan_id){
+				var keywords = scan_id;
+				scan_id = 0;
+			}else{
+				var keywords = $.trim($("#searchInput").val());
+				if (keywords == '') {
+					$.toast.prototype.defaults.duration=1000;//1秒
+					$.toast("请输入编号",'text');
+					return false;
+				}
+			}
+			$.ajax({
+				type:'post',
+				url:'order.php?act=ajax_column',
+				data:{id:keywords},
+				dataType:'json',     
+				success:function(data){
+					if(data.code == 0){
+						$.toast.prototype.defaults.duration=1000;//1秒
+						$.toast(data.msg,'text');
+						return false;
+					}
+					title = data.list.user_name+"卡项核销"
+					text='<form id="item_form"><div class="weui-cells">';
+					$.each(data.list.column_info,function(i,j){
+						text += '<a class="weui-cell weui-cell_access" href="javascript:;"><div class="weui-cell__hd">'+j.column_name+'&nbsp;<span style="color:red;">*'+j.column_number+'</span></div><div class="weui-cell__bd weui-cell_primary"><p>剩余:<span style="color:red;">'+j.column_left_number+'</span></p></div>';
+						if(j.column_left_number > 0){
+							text += '<span>核销:<input name="column_use['+j.id+']" class="weui-input item-input" pattern="[0-9]*" attr-left="'+j.column_left_number+'" attr-name="'+j.column_name+'" placeholder="0" type="number" style="max-width: 20px;" value="0"></span>';
+						}
+						text+='</a>';
+					});
+					text += "</div></form>";
+					$.modal({
+						title: title,
+						text: text,
+						autoClose:false,
+						buttons:[
+							{ text: "确认", onClick: function(){card_verify()}},
+							{ text: "取消", onClick: function(){card_cancel()}},
+						]
+					});
+				}
+			})
+		};
+		
+		if(scan_id>0){
+			search();
+		}
+
+		function card_verify(){
+			var verify = false;
+			$.each($('.item-input'),function(i,j){
+				var column_name = $(j).attr('attr-name');
+				if($(j).val()<0 || $(j).val()>parseInt($(j).attr('attr-left'))){
+						$.toast(column_name+"的核销数量不合法",'text');
+				}
+				if($(j).val()>0){
+					verify = true;
+				}
+			});
+			if(!verify){
+				$.closeModal();
+			}else{
+				$.ajax({
+					type:'post',
+					url:'order.php?act=item_verify',
+					data:$('#item_form').serializeArray(),
+					dataType:'json',     
+					success:function(data){
+						$.toast(data.msg,'text');
+						if(data.code == 0){
+							return false;
+						}else{
+							window.location.href = 'order.php?act=column_sign';
+						}
+					}
+				})
+			}
+		}
+
+		function card_cancel(){
+			$.closeModal();
+		}
+
+		$("#searchInput").keydown(function(event) {
+			if (event.keyCode == 13) {
+				search();
+			}
+		});
+		
+		$('.item-order').on('click',function(){
+			var orderid = $(this).attr('attr-orderid');
+			window.location.href = 'order.php?act=info&order_id='+orderid;
+		});
+
+	  })
+	  </script>
+      {if $full_page eq 1}
+    </div>
+
+	 {include file='weixinsdk.htm'}
+    {include file='static_div.htm'}
+  </body>
+</html>
+{/if}
+

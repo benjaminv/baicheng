@@ -1,0 +1,157 @@
+<!-- $Id: order_info.htm 17060 2010-03-25 03:44:42Z liuhui $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="topbar.js,../js/utils.js,listtable.js,selectzone.js,../js/common.js,jquery-1.6.2.min.js,chosen.jquery.min.js"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<link href='styles/store.css' rel='stylesheet' type='text/css' />
+<link href='styles/chosen/chosen.css' rel='stylesheet' type='text/css' />
+<!--搜索区域-->
+<div class="form-div">
+  <form action="supplier_affiliate.php" name="searchForm" method="post">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td width="9%" align="right"></td>
+          <td colspan="3">
+                当前申请提现佣金：<em>{$supplier.nowcash_money}元</em>
+                当前还可提现佣金：<em>{$supplier.commission_money}元</em>
+                已提现佣金：<em>{$supplier.withdrawals_money}元</em>
+          </td>
+      </tr>
+    </table>
+  </form>
+</div>
+<div class="list-div" id="listDiv">
+{/if}
+  <table cellpadding="3" cellspacing="1">
+    <tr>
+      <th><a href="javascript:listTable.sort('add_time'); ">提现时间</a></th>
+      <th>提现单号</th>
+      <th>提现金额</th>
+      <th>收款方式</th>
+      <th>付款流水账号</th>
+      <th>付款时间</th>
+      <th>提现状态</th>
+      <th>操作</th>
+    </tr>
+	{foreach from=$cash_order_list item=cashitem}
+    <tr>
+      <td align="center">{$cashitem.add_time}</td>
+      <td align="center">{$cashitem.order_sn}</td>
+      <td align="center">{$cashitem.money}元</td>
+      <th align="center">{if $cashitem.pay_typ==1}支付宝【账号：{$cashitem.pay_number}姓名：{$cashitem.pay_name}】{else}微信{/if}</th>
+      <td>{$cashitem.online_number}</td>
+      <td>{$cashitem.pay_time}</td>
+      <td align="center">{$cashitem.status_txt}</td>
+      <td align="center">
+        {if $cashitem.status==0||$cashitem.status==3}
+        <a href="javascript:;" onclick="listTable.remove({$cashitem.id}, '你确认要删除该记录吗？', 'remove_order')">删除</a>
+        {/if}
+      </td>
+    </tr>
+	{/foreach}
+	<!--没有佣金记录的显示-->
+    <!--<tr><td class="no-records" colspan="7">{$lang.no_records}</td></tr>-->
+
+  </table>
+<table id="page-table" cellspacing="0">
+  <tr>
+    <td>&nbsp;</td>
+    <td align="right" nowrap="true">
+    {include file="page.htm"}
+    </td>
+  </tr>
+</table>
+
+{if $full_page}
+</div>
+{literal}
+<script language="JavaScript">
+listTable.recordCount = {$record_count};
+listTable.pageCount = {$page_count};
+
+{foreach from=$filter item=item key=key}
+listTable.filter.{$key} = '{$item}';
+{/foreach}
+onload = function()
+{
+	// 开始检查订单
+	startCheckOrder();
+}
+
+function check(status)
+{
+	if(status <= 0){//冻结状态下结算佣金验证
+		var snArray = new Array();
+		var eles = document.forms['theForm'].elements;
+		for (var i=0; i<eles.length; i++)
+		{
+			if (eles[i].tagName == 'INPUT' && eles[i].type == 'checkbox' && eles[i].checked && eles[i].value != 'on')
+			{
+			  snArray.push(eles[i].value);
+			}
+		}
+		if (snArray.length == 0)
+		{
+			alert('请选择要结算的订单!');
+			return false;
+		}
+		else
+		{
+			eles['order_id'].value = snArray.toString();
+			return true;
+		}
+	}
+	else if(status == 1){//可结算状态下撤销全部佣金
+		if(confirm('撤销后，佣金状态由可结算将回归到冻结状态')){
+			return true;
+		}else{
+			return false;
+		}
+	}
+}
+
+function set_time(obj,starttime,endtime){
+	
+	if($(obj).hasClass("cur")){
+		$('.rebate_time').removeClass("cur");
+		$('#start_time').val('');
+		$('#end_time').val('');
+	}else{
+		$('.rebate_time').removeClass("cur");
+		$(obj).addClass("cur");
+		$('#start_time').val(starttime);
+		$('#end_time').val(endtime);
+	}
+}
+
+function searchSupp()
+{
+	//listTable.query = "search_supp_query";
+	listTable.filter['start_time'] = Utils.trim(document.forms['searchForm'].elements['start_time'].value);
+	listTable.filter['end_time'] = Utils.trim(document.forms['searchForm'].elements['end_time'].value);
+	listTable.filter['orderid'] = Utils.trim(document.forms['searchForm'].elements['orderid'].value);
+	listTable.filter['page'] = 1;
+	listTable.loadList();
+}
+
+function exportGoods()
+{
+	var frm=document.forms['searchForm'];
+	frm.action ="supplier_affiliate.php?act=export_goods&is_export=1";
+	frm.submit();
+}
+
+</script>
+
+<script type="text/javascript">
+    /* 代码删除 By  www.68ecshop.com Start */
+	$().ready(function(){
+		$(".chzn-select").chosen();
+	});
+    /* 代码删除 By  www.68ecshop.com End */
+</script>
+{/literal}
+
+{include file="pagefooter.htm"}
+{/if}

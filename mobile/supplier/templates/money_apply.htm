@@ -1,0 +1,117 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>提现  </title>
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" type="text/css" href="../themesmobile/dm299_com/css/public.css">
+<link rel="stylesheet" type="text/css" href="../themesmobile/dm299_com/css/user.css">
+<link href="../themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="../themesmobile/dm299_com/js/jquery.js"></script>
+<script type="text/javascript" src="../themesmobile/dm299_com/js/jquery.more.js"></script>
+<script type="text/javascript" src="../js/jquery.json.js"></script>
+<script type="text/javascript" src="../js/transport.js"></script>
+<script type="text/javascript" src="../js/common.js"></script>
+<script type="text/javascript" src="../js/utils.js"></script>
+<script type="text/javascript" src="../js/shopping_flow.js"></script>
+<style>
+    .url{
+       display: block;
+        width: 40px;
+        height: 40px;
+        background: url(../themesmobile/dm299_com/images/v-shop/back.png) no-repeat left center;
+    }
+</style>
+</head>
+<body class="body_bj">  
+<div class="top" style="height: 40px;overflow: hidden;">
+    <dl>
+        <dt><a href="javascript:history.back(-1)" class="url"></a></dt>
+        <dd>提现</dd>
+    </dl>
+</div>
+  	
+<div id="tbh5v0" >
+	<h2 class="vc_title">当前可提现金额：<strong>{$supplier.commission_money}元</strong></h2>
+
+	<div class="recharge">
+ 
+		<form name="formSurplus" method="post" action="money_apply.php?act=apply_money" onsubmit="return submitSurplus()">
+			<dl class="re_one">
+				<dt>提现金额:</dt>
+	 			<dd>
+	 				<input type="text" name="tx_money" value="" class="inputBg">
+	 				<font style=" font-size:14px; color:#666"> 元</font>
+	 			</dd> 
+				<dt style="float: left;margin-left: -24.8%;">收款类型:</dt>
+				<dd style="width: 70%;">
+				    <input type="radio" name="pay_typ" id="pay_typ_0" value="0" class="f_checkbox_t" checked="" style="width:18px; height:18px; line-height:18px;border:0;float:none;">
+				    <label for="pay_typ_0">微信</label>
+				    <input type="radio" name="pay_typ" id="pay_typ_1" class="f_checkbox_t" value="1" style="width:18px; height:18px; line-height:18px;border:0;float:none;">
+				    <label for="pay_typ_1">支付宝</label>
+				</dd>
+			</dl>
+			<dl class="re_one" id="pay_box" style="display:none;">
+				<dt>支付宝账号:</dt>
+				 <dd><input type="text" class="inputBg" name="pay_number"></dd>
+				<dt style="float: left;margin-left: -24.8%;margin-top: 10px;">支付宝姓名:</dt>
+				 <dd style="width: 70%;margin-top: 10px;"><input type="text" class="inputBg" name="pay_name" style="width: 86%;"></dd>
+			</dl>
+			<!-- <dl class="re_two">
+				<dt>会员备注:</dt>
+				<dd>
+					<textarea name="user_note" cols="55" rows="6" placeholder="请填写收款人姓名，收款方式，收款账号">
+					</textarea>
+				</dd>
+			</dl> -->
+			<span>  
+                <input type="submit" name="submit" class="bnt_1" value="提交申请">
+                <input type="reset" name="reset" class="bnt_1" value="重置表单">
+			</span>
+		</form>
+<script>
+$("input[name='pay_typ']").change(function(){
+    if(this.value==1){
+        $("#pay_box").show();
+    }else{
+        $("#pay_box").hide();
+    }
+});
+
+function goTop(){
+	$('html,body').animate({'scrollTop':0},600);
+}
+</script>
+<a href="javascript:goTop();" class="gotop"><img src="themesmobile/dm299_com/images/topup.png"></a>                                                                 
+		
+
+                 
+
+		 
+
+		
+
+               
+
+
+
+
+                        
+</div>
+
+<script language="javascript">
+$(function(){
+$('input[type=text],input[type=password]').bind({
+focus:function(){
+ $(".global-nav").css("display",'none');
+},
+blur:function(){
+ $(".global-nav").css("display",'flex');
+}
+});
+})
+</script>
+
+</div></body>

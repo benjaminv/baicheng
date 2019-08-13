@@ -1,0 +1,182 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="minimal-ui=yes,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>技师店铺</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="icon" href="animated_favicon.gif" type="image/gif" />
+
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/css/Animate.css">
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/css/style.css">
+<link rel="stylesheet" href="themesmobile/dm299_com/assets/css/weui.css">
+
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<style>
+        [v-cloak]{
+		display: none;
+	}
+	body{background:#f7f7f7;}
+	.technican-button{background:#fff;margin:1% 0% 2% 0%;}
+	.box{width:100%;float:left;}
+	.location{float:left;width:100%;background: #fff;padding: 3px;}
+	.location .change-city { background: #F4F4F4;border: 1px solid #E5E5E5;border-radius: 2px;color: #666;margin: 0 4px;    padding: 0 2px;}
+	a:visited{color:#eee;}
+	
+</style>
+</head>
+<body>
+<div style="width:96%;float:left;margin: 0% 2%;">
+	<section class="adminBox">
+	  <div class="location">
+		<i class="fa fa-map-marker" aria-hidden="true" style="font-size:15px;"></i>
+		<span id="city_block" style="font-size:15px;" v-cloak>{{cityInputVal}}</span>
+		<a class="change-city" href="javascript:"  v-on:click='cityPatFun'>切换城市</a>
+	  </div>
+	  <com-citychoice ref="city" v-on:tochildevent='cityjs'></com-citychoice>
+	</section>
+
+	<div class="box">
+		<div class="tech-list"> 
+			
+		</div>
+		<div class="footer-more weui-loadmore weui-loadmore_line" style="display:none;">
+		    <span class="weui-loadmore__tips">没有更多了</span>
+		</div>
+	</div>
+</div>
+
+
+
+<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+<script type="text/javascript" src="themesmobile/dm299_com/js/layer/layer.js"></script>
+<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=0220059404b41ee27b1f261d52370454"></script> 
+
+<script src="themesmobile/dm299_com/assets/js/vue.min.js"></script>
+<script src="themesmobile/dm299_com/assets/js/cityChoice.js"></script>
+
+<script>
+$(function(){
+	 var page = 1;
+	 var flag = true;//是否可以加载技师数据
+	 var append_type = 'init';
+
+	  new Vue({
+	    el:'.adminBox',
+	    data:{
+	      cityInputVal:'定位中',
+	    },
+	    methods:{
+	      cityPatFun:function(){
+		this.$refs.city.cityFun();
+	      },
+	      cityjs:function(data){
+		$('#city_block').html(data);
+		//根据城市搜索技师
+		page = 1;
+		append_type = 'init';
+		flag = true;
+		search_technican(page,data);
+	      }
+	    }
+	  })
+	  
+
+	  function search_technican(page,city){
+		$.ajax({
+			url:"technican.php?act=ajax_search",
+			data:{page:page,city:city},
+			dataType:"json",
+			type:'post',
+			success: function(data){
+			     if(data.code == 0){
+				show_simple_msg(data.msg);
+				html = '<section id="cart-content"><div class="qb_tac" style="padding:50px 0;text-align:center;">当前城市没有找到技师店铺</div></section>';
+				$('.tech-list').html(html);
+			     }else{
+				technican_callback(data.list);			
+			     }
+			}
+		});
+	  }
+		
+	  function technican_callback(res){
+		if(res.length == 0){
+			if(append_type == 'init'){
+				html = '<section id="cart-content"><div class="qb_tac" style="padding:50px 0;text-align:center;">当前城市没有找到技师店铺</div></section>';
+				$('.tech-list').html(html);
+			}else{
+			    $('.footer-more').fadeIn(100);
+			    setTimeout(function () {
+				$('.footer-more').fadeOut(100);
+			    }, 2000);
+			}
+			flag = false;
+		}else{
+			html = "";
+			$.each(res,function(i,j){
+				html += '<div class="weui-panel__bd technican-button" attr-id="'+ j.supplier_id +'"><a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg"><div class="weui-media-box__hd"><img class="weui-media-box__thumb" src="'+j.technican_bodyimg+'" alt="技师个人艺术照"></div><div class="weui-media-box__bd"><h4 class="weui-media-box__title">'+j.supplier_name+'</h4><p class="weui-media-box__desc">'+j.opus_remark+'</p></div></a></div>';
+			});
+			
+			flag = true;
+			if(append_type == 'init'){
+				$('.tech-list').html(html);
+			}else{
+				$('.tech-list').append(html);
+			}
+		}
+		
+	  }
+
+	  AMap.plugin('AMap.CitySearch', function () {
+		var citySearch = new AMap.CitySearch()
+		citySearch.getLocalCity(function (status, result) {
+		    if (status === 'complete' && result.info === 'OK') {
+			  $('#city_block').html(result.city);
+			  
+			  // 查询成功，result 即为当前所在城市信息
+			 search_technican(page,result.city);  
+		    }else{
+			//获取城市失败,请手动设置城市
+			show_simple_msg('获取城市失败,请手动设置城市');
+			 search_technican(page,''); 
+			//html = '<section id="cart-content"><div class="qb_tac" style="padding:50px 0">当前城市没有找到技师店铺</div></section>';
+			//$('.tech-list').html(html);
+		    }
+		})
+	 });
+
+	 function show_simple_msg(content){ 
+		layer.open({ content:content }); 
+	 }
+
+	 $(window).scroll(function(){
+		var winH = $(window).height(); //页面可视区域高度  
+		var scrollTop = $(window).scrollTop();//获取滚动条的位置
+		var pageH = $(document).height(); //页面总高度
+		if(winH + scrollTop >= pageH){
+			if(flag){
+				//防止重复加载请求
+				flag = false;
+				var city = $('#city_block').html();
+				page++;
+				append_type = 'append';
+				search_technican(page,city);
+			}
+		}
+	 });
+	  
+	$(".tech-list").delegate(".technican-button", "click", function(){
+		
+	    var supplier_id = $(this).attr('attr-id');
+		window.location.href="supplier.php?suppId="+supplier_id;
+	});
+})
+ 
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	
+<title>在线商城 管理中心 - 入驻商列表 </title>
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="styles/general.css" rel="stylesheet" type="text/css">
+<link href="styles/main.css" rel="stylesheet" type="text/css">
+<link href="styles/chosen/chosen.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="js/jquery-1.6.2.min.js"></script><script type="text/javascript" src="js/chosen.jquery.min.js"></script><script type="text/javascript" src="js/jquery.json.js"></script><script type="text/javascript" src="../js/transport.js"></script><script type="text/javascript" src="js/common.js"></script>
+{insert_scripts files="../js/utils.js,listtable.js"}
+</head>
+<body>
+	<h1>
+		<span class="action-span1"><a href="index.php?act=main">在线商城 管理中心</a> </span><span id="search_id" class="action-span1"> - 技师列表 </span>
+		<div style="clear:both"></div>
+	</h1>
+	<form method="post" action="" name="listForm" onsubmit="return confirm(batch_drop_confirm);">
+    <div class="list-div" id="listDiv">
+        
+        <table cellspacing="1" cellpadding="3" style="text-align: center;">
+         <tbody>
+            <tr>
+                <th>店铺ID</th>
+                <th>技师名称</th>
+                <th>技师编号</th>
+                <th>添加时间</th>
+                <th>更新时间</th>
+            </tr>
+            {foreach from=$info item=jishu}
+            	<tr>
+	                <td style="">{$jishu.supplier_id} </td>
+	                <td style="padding-left: 10px;">{$jishu.technican_name}</td>
+	                <td style="">{$jishu.technican_sn}</td>
+	                <td style="">{$jishu.add_time}</td>
+	                <td style="" align="center">{$jishu.update_time}</td>
+            	</tr>
+            {/foreach}
+            </tbody>
+        </table>
+        <table id="page-table" cellspacing="0">
+        <tbody>
+            <tr>
+                <td>&nbsp;</td>
+                <td nowrap="true" align="right">
+                       
+            	<div id="turn-page">
+        			总计  <span id="totalRecords">{$count}</span>
+        			个记录  当前第 <span id="pageCurrent">{$nowpage}</span>
+        			页，每页 <input type="text" size="3" id="pageSize" value="{if $pagesize }{$pagesize}{else}15{/if}" >
+        			<span id="page-link">
+          			<a href="supplier_jishi.php?nowpage=1&pagesize={$pagesize}">第一页</a>
+          			<a href="{if $info}supplier_jishi.php?nowpage={$prepage}&pagesize={$pagesize}{else}#;{/if}">上一页</a>
+          			<a href="{if $info}supplier_jishi.php?nowpage={$nextpage}&pagesize={$pagesize}{else}#;{/if}">下一页</a>
+          			<a href="{if $info}supplier_jishi.php?nowpage={$lastpage}&pagesize={$pagesize}{else}#;{/if}">最末页</a>
+        			</span>
+      			</div>
+      		    </td>
+      		</tr>
+      	</tbody>
+      </table>
+</body>
+<script type="text/javascript">
+	$('#pageSize').change(function(){
+
+		var pagesize = $('#pageSize').val();
+
+		 window.location.href = 'supplier_jishi.php?act=change&pagesize='+pagesize;
+	})
+</script>
+</html>

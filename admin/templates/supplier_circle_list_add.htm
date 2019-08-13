@@ -1,0 +1,70 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="validator.js,../js/transport.org.js,../js/region.js"}
+<div class="main-div" style="padding:10px;background:#fff;">
+	<form method="post" action="supplier.php" id="theform2" enctype="multipart/form-data">
+	<table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+        <tbody>
+        <tr>
+            <td class="label">店铺:</td>
+            <td>
+                <label>按照店铺名称搜索</label>
+                <input id="keyword" type="text" value="" />
+                <input type="button" class="button search-supplier" name="search" value="{$lang.button_search}" />
+                <select name="supplier_id" id="supplier_list"></select>
+                <p>注意：搜索结果只显示前20条记录，如果没有找到，请更精确地查找。</p>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">商圈：</td>
+            <td>
+                 <select name="circle_id">
+					{foreach from=$circle_list item=item}
+						<option value='{$item.id}'>{$item.name}</option>
+					{/foreach}
+				 </select>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+	<table border="0" cellpadding="0" cellspacing="0" class="store-joinin">
+	  <tr>
+		<td align="center">
+		  <input type="submit" class="button" value="{$lang.button_submit}" />
+		  <input type="hidden" name="act" value="{$form_action}" />
+		</td>
+	  </tr>
+	</table>
+</form>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script>
+$(function(){
+	$('.search-supplier').click(function(){
+		var search_key = $('#keyword').val();
+		if(!search_key){
+			alert('搜索条件不能为空');
+			return false;
+		}
+		$.ajax({
+			url:'supplier.php?act=search_supplier',
+            dataType: 'json', 
+            data:{search_key:search_key},
+            success: function(data){
+				if(data.length==0){
+					html="";
+				}else{
+					html="";
+					$.each(data,function(i,j){
+						html += "<option value='"+j.supplier_id+"'>"+j.supplier_name+"</option>";
+					});
+				}
+				$('#supplier_list').html(html);
+			}
+		});
+	});
+
+})
+	
+</script>

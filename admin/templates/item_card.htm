@@ -1,0 +1,61 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+<!-- 供货商搜索 -->
+
+<form method="post" action="" name="listForm">
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>卡项ID</th>
+                <th>卡项名称</th>
+                <th>卡项封面</th>
+				<th>所属商圈</th>
+				<th>是否启用</th>
+				<th>更新时间</th>
+                <th>操作</th>
+            </tr>
+            {foreach from=$item_card_list item=card}
+            <tr>
+                <td align='center'>{$card.id} </td>
+				<td align='center'>{$card.name} </td>
+				<td align='center'><img src="../{$card.thumb}" width='50' height="50"></td>
+                <td  align='center' >{$card.circle_name}</td>
+                <td align='center'>{if $card.status == 1}开启{else}关闭{/if}</td>
+                <td align='center'>{$card.update_time}</td>
+                <td align="center">
+					<a href="card_item.php?act=goods&item_id={$card.id}" title="商品维护">商品维护</a>
+					&nbsp;|&nbsp;
+					<a href="card_item.php?act=column_list&id={$card.id}" title="卡项栏目">卡项项目</a>
+					&nbsp;|&nbsp;
+					<a href="card_item.php?act=item_card_info&id={$card.id}" title="编辑">编辑</a>
+					&nbsp;|&nbsp;
+					<a href="card_item.php?act=item_card_del&id={$card.id}" title="删除">删除</a>
+				</td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">没有找到任何记录</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>&nbsp;</td>
+                <td align="right" nowrap="true">
+                    {include file="page.htm"}
+                </td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+
+<script type="text/javascript" language="javascript">
+    
+</script>
+{include file="pagefooter.htm"}
+{/if}

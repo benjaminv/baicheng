@@ -1,0 +1,140 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+{insert_scripts files="validator.js"}
+
+<style>
+.point_type{
+    margin-top: 0px;
+
+}
+</style>
+
+<div id="separate">
+<div class="affiliate-div">
+<style>
+.fx_tishi{ width:100%; overflow:hidden; margin:auto;  padding:0px;padding-top:10px; padding-bottom:10px; border:1px solid #E6E6E6; background:#FBFBFB; margin-bottom:20px;}
+.fx_tishi span{ display:block; width:98%; overflow:hidden; margin:auto;font-size:12px; line-height:150%; color:#666 }
+</style>
+<!--<div class="fx_tishi">
+<span style=" font-size:14px; color:#F60">温馨提示：关于店铺分销比例设置的几点说明：</span>
+<span>1.一级店铺分销比例，即会员A发展的下级会员B，会员B购买了分销商品，A获得的分成金额；</span>
+<span>2.二级店铺分销比例，即分销商A发展的下级分销商B，分销商B发展了下级会员C，会员C购买了分销商品，分销商A获得的分成金额；</span>
+<span>3.三级店铺分销比例，即分销商A发展的下级分销商B，分销商B发展了分销商C，分销商C发展了下级会员D，会员D购买了分销商品，分销商A获得的分成金额；</span>
+<span>4.分销比例是根据分成金额基数进行计算的，分成金额基数是指：当微分销按照商品进行分成时，商品设置的分成金额就是分成金额的基数，分销比例根据此金额进行计算；当微分销按照订单进行分成时，对订单设置的分成百分比就是分成金额的基数，分销比例根据此百分比进行计算。（例如：某商品的分成金额为5元，一级分销比例是60%，那么分销商A的分成金额就是3元。）</span>
+</div>-->
+<form method="post" action="mobile_affiliate_supplier.php">
+            <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td align="right" class="label">注册默认所属店铺：</td>
+                    <td>
+                        <select name="default_reg_supplier_id">
+                            <option value=''>请选择</option>
+                            {foreach from=$supplier_list item=sitem}
+                            <option value="{$sitem.supplier_id}" {if $sitem.supplier_id eq $config.config.default_reg_supplier_id}selected{/if}>{$sitem.supplier_name}</option>
+                            {/foreach}
+                        </select>
+                        <br />
+                        <span class="notice-span" id="notice6">设置用户注册时如果没有上级时所对应的所属店铺</span></td>
+                </tr>
+                <tr>
+                    <td align="right" class="label">地堆团队直属分成比：</td>
+                    <td><input type="text" name="level_push_team_all" maxlength="150" size="10" value="{ $config.config.level_push_team_all}" />
+                        <br />
+                        <span class="notice-span" id="notice7">地堆团队将按此设置获得订单的分成，不包含指定店铺会员</span></td>
+                </tr>
+                <tr>
+                    <td align="right" class="label">地堆团队非直属分成比：</td>
+                    <td><input type="text" name="level_not_push_team_all" maxlength="150" size="10" value="{ $config.config.level_not_push_team_all}" />
+                        <br />
+                        <span class="notice-span" id="notice8">地堆团队将按此设置获得订单的分成，指定店铺会员按非直属分成计算</span></td>
+                </tr>
+
+				<!-- <tr> -->
+                    <!-- <td align="right" class="label">店铺会员异店消费所属店铺分成</td> -->
+                    <!-- <td><input type="text" name="supplier_store_rate" maxlength="150" size="10" value="{ $config.config.supplier_store_rate}" />% -->
+                        <!-- <br /> -->
+                        <!-- <span class="notice-span" id="notice8">店铺直属会员去其他店铺消费的时候，该店铺获得的分成比例</span></td> -->
+                <!-- </tr> -->
+
+				
+				
+
+
+
+				  <tr><td></td>
+                    <td><input type="hidden" name="act" value="updata" /><input type="submit" value="{$lang.button_submit}" class="button" /></td>
+                </tr>
+            </table>
+    </form>
+</div>
+<div class="list-div" id="listDiv">
+{/if}
+
+<table cellspacing='1' cellpadding='3'>
+	<tr>
+        <th name="levels" ReadOnly="true" width="10%">分成级别</th>
+		<th name="level_bendian" Type="TextBox">(平台商品)本店消费店铺分成</th>
+		<th name="level_ydian" Type="TextBox">(平台商品)异店消费店铺分成</th>
+		<th name="level_fuwufe" Type="TextBox">(平台服务)店铺服务费</th>
+
+		<!-- <th name="level_supplier_rate" Type="TextBox">(店铺商品)异店消费店铺分成</th> -->
+		<th Type="Button">{$lang.handler}</th>
+	</tr>
+{foreach from=$config.item item=val name=nav}
+<tr align="center">
+	<td>{$smarty.foreach.nav.iteration}</td>
+    <td>
+        比例&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_bendian', '{$smarty.foreach.nav.iteration}','0'); return false;">{if !empty($val.level_bendian)}{$val.level_bendian}{else}0%{/if}</span>
+    </td>
+	<td>
+        比例&nbsp&nbsp&nbsp&nbsp <span onclick="listTable.edit(this, 'edit_ydian', '{$smarty.foreach.nav.iteration}','0'); return false;">{if !empty($val.level_ydian)}{$val.level_ydian}{else}0%{/if}</span>     </td>
+
+    <td>
+        数值&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_fuwufe', '{$smarty.foreach.nav.iteration}','1'); return false;">{if !empty($val.level_fuwufe)}{$val.level_fuwufe}{else}0{/if}</span>
+    </td>
+	<td ><a href="javascript:confirm_redirect(lang_removeconfirm, 'mobile_affiliate_supplier.php?act=del&id={$smarty.foreach.nav.iteration}')"><img style="border:0px;" src="images/no.gif" /></a></td>
+</tr>
+{/foreach}
+</table>
+{if $full_page}
+</div>
+</div>
+<script>
+    function hide_box(obj,cls,edit,iteration){
+        $('.'+cls).next().css('display','none');
+        $(obj).next().css('display','inline-block');
+        var type=$(obj).val();
+        var next=$(obj).next();
+        listTable.edit(next[0], edit, iteration,type)
+    }
+</script>
+<script type="Text/Javascript" language="JavaScript">
+var all_null = '{$lang.all_null}';
+{literal}
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+  cleanWhitespace(document.getElementById("listDiv"));
+  if (document.getElementById("listDiv").childNodes[0].rows.length<3)
+  {
+    listTable.addRow(check);
+  }
+
+}
+function check(frm)
+{
+  if (frm['level_bendian'].value == "" && frm['level_ydian'].value == "" && frm['level_fuwufe'].value == "")
+  {
+     frm['level_bendian'].focus();
+     alert(all_null);
+     return false;
+  }
+  return true;
+}
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

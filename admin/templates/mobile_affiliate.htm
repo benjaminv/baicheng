@@ -1,0 +1,155 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+{insert_scripts files="validator.js"}
+
+<style>
+.point_type{
+    margin-top: 0px;
+
+}
+</style>
+<div class="affiliate-div"  style="display:none; ">
+<form method="post" action="mobile_affiliate.php">
+<!--<input type="radio" name="on" value="1" {if $config.on eq 1} checked="true" {/if} onClick="javascript:actDiv('separate','');actDiv('btnon','none');" >{$lang.on}
+<input type="radio" name="on" value="0" {if !$config.on || $config.on eq 0} checked="true" {/if} onClick="javascript:actDiv('separate','none');actDiv('btnon','');" style="vertical-align:none">{$lang.off}-->
+<input type="hidden" name="act" value="on" />
+<input type="submit" value="{$lang.button_submit}" class="button" id="btnon"/>
+</form>
+</div>
+<div id="separate">
+<div class="affiliate-div">
+<style>
+.fx_tishi{ width:100%; overflow:hidden; margin:auto;  padding:0px;padding-top:10px; padding-bottom:10px; border:1px solid #E6E6E6; background:#FBFBFB; margin-bottom:20px;}
+.fx_tishi span{ display:block; width:98%; overflow:hidden; margin:auto;font-size:12px; line-height:150%; color:#666 }
+</style>
+<div class="fx_tishi">
+<span style=" font-size:14px; color:#F60">温馨提示：关于分销比例设置的几点说明：</span>
+<span>1.一级分销比例，即分销商A发展的下级会员B，会员B购买了分销商品，分销商A获得的分成金额；</span>
+<span>2.二级分销比例，即分销商A发展的下级分销商B，分销商B发展了下级会员C，会员C购买了分销商品，分销商A获得的分成金额；</span>
+<span>3.三级分销比例，即分销商A发展的下级分销商B，分销商B发展了分销商C，分销商C发展了下级会员D，会员D购买了分销商品，分销商A获得的分成金额；</span>
+<span>4.分销比例是根据分成金额基数进行计算的，分成金额基数是指：当微分销按照商品进行分成时，商品设置的分成金额就是分成金额的基数，分销比例根据此金额进行计算；当微分销按照订单进行分成时，对订单设置的分成百分比就是分成金额的基数，分销比例根据此百分比进行计算。（例如：某商品的分成金额为5元，一级分销比例是60%，那么分销商A的分成金额就是3元。）</span>
+</div>
+<form method="post" action="mobile_affiliate.php">
+            <table width="100%" border="0" cellspacing="0" cellpadding="4">
+                <tr>
+                    <td align="right" class="label">顾客购买有提成</td>
+                    <td>
+                    <input type="radio" name="ex_fenxiao_personal" value="0" {if $config.config.ex_fenxiao_personal eq 0}checked{/if}>关闭
+                    <input type="radio" name="ex_fenxiao_personal" value="1" {if $config.config.ex_fenxiao_personal eq 1}checked{/if}>开启&nbsp&nbsp&nbsp&nbsp
+                                                 双击改变金额比例：<span onclick="listTable.edit(this, 'edit_personal_money'); return false;">{if $config.config.level_money_personal eq ''}0{else}{$config.config.level_money_personal}{/if}</span>%&nbsp&nbsp&nbsp&nbsp
+					双击改变积分比例：<span onclick="listTable.edit(this, 'edit_personal_point'); return false;">{if $config.config.level_point_personal eq ''}0{else}{$config.config.level_point_personal}{/if}</span>%&nbsp&nbsp&nbsp&nbsp
+					双击改变最低购买金额：<span onclick="listTable.edit(this, 'edit_personal_lever_money'); return false;">{if $config.config.personal_lever_money eq ''}0{else}{$config.config.personal_lever_money}{/if}</span>元
+					<br/>
+                    <span class="notice-span" id="notice5">设置购买自己有提成</span></td>
+                </tr>
+
+				<tr>
+                    <td align="right" class="label">商品推广海报</td>
+                    <td>
+						<select name="poster_id">
+							<option value='0'>请选择</option>
+							{foreach from=$poster_list item=poster}
+								<option value='{$poster.id}' {if $poster.id eq $config.config.poster_id}selected{/if}>{$poster.template_name}</option>
+							{/foreach}
+						</select>
+						<br/>
+						<span class="notice-span" id="notice5">全局的商品推广海报</span>
+					</td>
+                </tr>
+
+
+				  <tr><td></td>
+                    <td><input type="hidden" name="act" value="updata" /><input type="submit" value="{$lang.button_submit}" class="button" /></td>
+                </tr>
+            </table>
+    </form>
+</div>
+<div class="list-div" id="listDiv">
+{/if}
+
+<table cellspacing='1' cellpadding='3'>
+	<tr>
+        <th name="levels" ReadOnly="true" width="10%">分销级别</th>
+		<th name="level_point" Type="TextBox">等级积分分成</th>
+		<th name="level_sale_point" Type="TextBox">消费积分分成</th>
+		<th name="level_money" Type="TextBox">现金分成</th>
+		<th Type="Button">{$lang.handler}</th>
+	</tr>
+{foreach from=$config.item item=val name=nav}
+<tr align="center">
+	<td>{$smarty.foreach.nav.iteration}</td>
+    <td>
+        <input  {if $val.level_point_type eq 0 or empty($val.level_point_type)}checked{/if} class="point_type level_point_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_point_type_{$smarty.foreach.nav.iteration}','edit_point','{$smarty.foreach.nav.iteration}')" type="radio" name="level_point_type_{$smarty.foreach.nav.iteration}" value="0"/>比例&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_point', '{$smarty.foreach.nav.iteration}','0'); return false;">{if !empty($val.level_point)}{$val.level_point}{else}0%{/if}</span>
+        <input {if $val.level_point_type eq 1}checked{/if} class="point_type level_point_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_point_type_{$smarty.foreach.nav.iteration}','edit_point','{$smarty.foreach.nav.iteration}')" type="radio" name="level_point_type_{$smarty.foreach.nav.iteration}"  value="1"/>数值&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_point', '{$smarty.foreach.nav.iteration}','1'); return false;">{if !empty($val.level_point_num)}{$val.level_point_num}{else}0{/if}</span>
+
+    </td>
+	<td>
+        <input {if ($val.level_sale_point_type eq 0 or empty($val.level_sale_point_type))}checked{/if} class="point_type level_sale_point_type_{$smarty.foreach.nav.iteration}" onclick="hide_box(this,'level_sale_point_type_{$smarty.foreach.nav.iteration}','edit_sale_point','{$smarty.foreach.nav.iteration}')" type="radio" name="level_sale_point_type_{$smarty.foreach.nav.iteration}" value="0"/>比例&nbsp&nbsp&nbsp&nbsp <span onclick="listTable.edit(this, 'edit_sale_point', '{$smarty.foreach.nav.iteration}','0'); return false;">{if !empty($val.level_sale_point)}{$val.level_sale_point}{else}0%{/if}</span>
+        <input {if $val.level_sale_point_type eq 1 }checked{/if} class="point_type level_sale_point_type_{$smarty.foreach.nav.iteration}" type="radio" onclick="hide_box(this,'level_sale_point_type_{$smarty.foreach.nav.iteration}','edit_sale_point','{$smarty.foreach.nav.iteration}')" name="level_sale_point_type_{$smarty.foreach.nav.iteration}"  value="1"/>数值&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_sale_point', '{$smarty.foreach.nav.iteration}','1'); return false;">{if !empty($val.level_sale_point_num)}{$val.level_sale_point_num}{else}0{/if}</span>
+       </td>
+	<td>
+        <input {if $val.level_money_type eq 0 or empty($val.level_money_type)}checked{/if}  class="point_type level_money_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_money_type_{$smarty.foreach.nav.iteration}','edit_money','{$smarty.foreach.nav.iteration}')" type="radio" name="level_money_type_{$smarty.foreach.nav.iteration}" value="0"/>比例&nbsp&nbsp&nbsp&nbsp <span onclick="listTable.edit(this, 'edit_money', '{$smarty.foreach.nav.iteration}','0'); return false;">{if !empty($val.level_money)}{$val.level_money}{else}0%{/if}</span>
+        <input {if $val.level_money_type eq 1}checked{/if}  class="point_type level_money_type_{$smarty.foreach.nav.iteration}"  onclick="hide_box(this,'level_money_type_{$smarty.foreach.nav.iteration}','edit_money','{$smarty.foreach.nav.iteration}')" type="radio" name="level_money_type_{$smarty.foreach.nav.iteration}"  value="1"/>数值&nbsp&nbsp&nbsp&nbsp<span onclick="listTable.edit(this, 'edit_money', '{$smarty.foreach.nav.iteration}','1'); return false;">{if !empty($val.level_money_num)}{$val.level_money_num}{else}0{/if}</span>
+
+    </td>
+	<td ><a href="javascript:confirm_redirect(lang_removeconfirm, 'mobile_affiliate.php?act=del&id={$smarty.foreach.nav.iteration}')"><img style="border:0px;" src="images/no.gif" /></a></td>
+</tr>
+{/foreach}
+</table>
+{if $full_page}
+</div>
+</div>
+<script>
+    function hide_box(obj,cls,edit,iteration){
+        $('.'+cls).next().css('display','none');
+        $(obj).next().css('display','inline-block');
+        var type=$(obj).val();
+        var next=$(obj).next();
+        listTable.edit(next[0], edit, iteration,type)
+    }
+</script>
+<script type="Text/Javascript" language="JavaScript">
+<!--
+{if !$config.on || $config.on eq 0}
+actDiv('separate','none');
+{else}
+actDiv('btnon','none');
+{/if}
+{if $config.config.separate_by eq 1}
+actDiv('listDiv','none');
+{/if}
+
+var all_null = '{$lang.all_null}';
+{literal}
+onload = function()
+{
+  // 开始检查订单
+  startCheckOrder();
+  cleanWhitespace(document.getElementById("listDiv"));
+  if (document.getElementById("listDiv").childNodes[0].rows.length<9)
+  {
+    listTable.addRow(check);
+  }
+
+}
+function check(frm)
+{
+  if (frm['level_point'].value == "" && frm['level_money'].value == "")
+  {
+     frm['level_point'].focus();
+     alert(all_null);
+     return false;
+  }
+
+  return true;
+}
+function actDiv(divname, flag)
+{
+    document.getElementById(divname).style.display = flag;
+}
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

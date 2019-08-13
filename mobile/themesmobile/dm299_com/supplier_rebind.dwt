@@ -1,0 +1,108 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="minimal-ui=yes,width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<meta name="Keywords" content="{$keywords}" />
+<meta name="Description" content="{$description}" />
+<!-- TemplateBeginEditable name="doctitle" -->
+<title>绑定店铺</title>
+<link rel="shortcut icon" href="favicon.ico" />
+<link rel="icon" href="animated_favicon.gif" type="image/gif" />
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+<style>
+	body{background:#eee;}
+	.box{width:96%;margin: 0% 2%;float:left;}
+	.box-list,.box-list-t,.box-list-c{width:100%;float:left;}
+	.box-list{margin: 5% 0%;background: #fff;}
+	.box-list-t{text-align:center;padding: 2% 0%;}
+	.box-list-c{width:100%;}
+	.box-list-c-l{width:100px;float:left;padding: 3%;}
+	.box-list-c-l img{width:100%;}
+	.box-list-c-r{float:left;background:red;color:#fff;background: red;color: #fff;margin: 36px 0px 0px 20px;padding: 10px;}
+</style>
+</head>
+<body>
+{if $act == "rebind_index"}
+<div class="box"> 
+	<div class="box-list">
+		<div class="box-list-t">您已经绑定店铺:【{$old_supplier_info.supplier_name}】</div>
+		<div class="box-list-c">
+			<div class="box-list-c-l"><img src="{$old_supplier_info.shop_logo}"></div>
+			<div class="box-list-c-r old-button">
+				进入店铺
+			</div>
+		</div>
+	</div>
+
+	<div class="box-list">
+		<div  class="box-list-t">重新绑定新店铺:【{$new_supplier_info.supplier_name}】</div>
+		<div  class="box-list-c">
+			<div  class="box-list-c-l"><img src="{$new_supplier_info.shop_logo}"></div>
+			<div  class="box-list-c-r new-button">
+				绑定并进入店铺
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+<script>
+	$('.old-button').click(function(){
+		window.location.href="supplier.php?suppId={$old_supplier_info.supplier_id}";
+	});
+	$('.new-button').click(function(){
+		if(confirm('是否确定绑定到新店铺?')){
+			window.location.href="supplier_rebind.php?act=rebind&suppId={$new_supplier_info.supplier_id}";
+		}
+	});
+</script>
+{elseif $act == 'circle'}
+	<div class="box"> 
+		{foreach from=$supplier_list item=info}
+		<div class="box-list">
+			<div class="box-list-t">店铺:【{$info.supplier_name}】</div>
+			<div class="box-list-c">
+				<div class="box-list-c-l"><img src="{$info.shop_logo}"></div>
+				<div class="box-list-c-r old-button" attr-supplierid="{$info.supplier_id}">
+					进入店铺
+				</div>
+			</div>
+		</div>
+		{/foreach}
+		
+	</div>
+
+	<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+	<script>
+		$('.old-button').click(function(){
+			var supplier_id = $(this).attr('attr-supplierid');
+			window.location.href="supplier.php?suppId="+supplier_id;
+		});
+	</script>		
+{else}
+<div class="box"> 
+	{foreach from=$supplier_list item=info}
+	<div class="box-list">
+		<div class="box-list-t">店铺:【{$info.supplier_name}】</div>
+		<div class="box-list-c">
+			<div class="box-list-c-l"><img src="{$info.shop_logo}"></div>
+			<div class="box-list-c-r old-button" attr-supplierid="{$info.supplier_id}">
+				进入店铺
+			</div>
+		</div>
+	</div>
+	{/foreach}
+	
+</div>
+
+<script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+<script>
+	$('.old-button').click(function(){
+		var supplier_id = $(this).attr('attr-supplierid');
+		window.location.href="supplier.php?suppId="+supplier_id;
+	});
+</script>	
+{/if}
+</body>
+</html>

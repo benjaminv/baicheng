@@ -1,0 +1,71 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>佣金明细 </title>
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+<link rel="stylesheet" type="text/css" href="/themesmobile/dm299_com/css/public.css">
+<link rel="stylesheet" type="text/css" href="/themesmobile/dm299_com/css/user.css">
+<link href="../themesmobile/dm299_com/css/v_user.css" type="text/css" rel="stylesheet">
+<script type="text/javascript" src="/themesmobile/dm299_com/js/jquery.js"></script>
+<script type="text/javascript" src="/themesmobile/dm299_com/js/jquery.more.js"></script>
+<script type="text/javascript" src="/js/jquery.json.js"></script>
+<script type="text/javascript" src="/js/transport.js"></script>
+<script type="text/javascript" src="/js/common.js"></script>
+<script type="text/javascript" src="/js/utils.js"></script>
+<script type="text/javascript" src="/js/shopping_flow.js"></script>
+
+</head>
+<body class="body_bj">
+<div class="top" style="height: 40px;overflow: hidden;">
+    <dl>
+        <dt>
+          <a href="javascript:history.back(-1)" class="url"></a>
+        </dt>
+        <dd>佣金明细</dd>
+    </dl>
+</div>
+<div id="tbh5v0">
+	{foreach from=$new_info item=information}
+	<div style="border: 1px solid #797979;margin-top:20px;">
+		<table style="width: 100%;font-size: 12px;">
+			<tr >
+				<td style="width: 10%;"><img src="themesmobile/dm299_com/images/v-shop/m10.png" style="width: 30px;height: 30px;margin-left: 5px;"></td>
+				<td >{$information.user_name}</td>
+				<td >{if $information.separate_type}确认收货{else}已付款{/if}</td>
+			</tr>
+			<tr>
+                <td rowspan="2" style="width: 56px;"><img src="{$information.headimg}" style="width: 40px;height: 40px;margin-left: 5px;"></td>
+                <td  style="text-align: left;width: 124px;padding-left: 4px;">粉丝神秘商品</td>
+            </tr >
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding-left: 4px;">
+                	付款金额：<span style="color: #FF9900;">￥{$information.goods_amount}</span>
+                </td>
+                <td>预估收益：{if $information.money > 0 }￥{$information.money}{/if}{if $information.sale_point} + {$information.sale_point}积分{/if}</td>
+            </tr>
+		</table> 
+		<div style="height: 6px;"></div>
+		<table>
+			<tr style="font-size: 12px;">
+            	<td style="min-width: 150px">{$information.time} 创建</td>
+            	<!-- <td style="min-width: 150px">2019-04-10 10:09:28 结算</td> -->	
+            </tr>
+		</table>
+	</div>
+	{/foreach} 
+    <div style="position: relative;margin-left: 50%;width: 120px;left: -40px; display: {if $pages >= $totalpage}block{else}none{/if}">已经到底了</div>
+	<div style="background-color: #F9F8FD;height: 38px;">
+       
+        <a href="v_user_commission.php?page={$prev}" class="prev" style="margin:auto;float: left;width: 50%;">
+            <img src="themesmobile/dm299_com/images/v-shop/arrow_left.png" style="width: 12px;height: 20px;margin-top: 6px;position: relative;left: 75%;">
+        </a>
+
+        <a href="{if $next > $totalpage}#{else}v_user_commission.php?page={$next}{/if}" style="float:left;width: 50%;"><img src="themesmobile/dm299_com/images/v-shop/arrow_right.png" style="width: 12px;height: 20px;margin-top: 6px;margin-left: 30px;margin-bottom: 10px;"></a>  
+
+    </div>
+</div>
+</body>
+</html>

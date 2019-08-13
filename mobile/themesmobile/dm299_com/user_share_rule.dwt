@@ -1,0 +1,61 @@
+<html class=" js flexbox canvas canvastext webgl touch geolocation postmessage websqldatabase indexeddb hashchange history draganddrop websockets rgba hsla multiplebgs backgroundsize borderimage borderradius boxshadow textshadow opacity cssanimations csscolumns cssgradients cssreflections csstransforms csstransforms3d csstransitions fontface generatedcontent video audio localstorage sessionstorage webworkers applicationcache svg inlinesvg smil svgclippaths"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>用户中心_联美LinkallMore美业商城  </title>
+    <meta name="Keywords" content="">
+    <meta name="Description" content="">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/user.css">
+    <link rel="stylesheet" type="text/css" href="themesmobile/dm299_com/css/public.css">
+    <script src="themesmobile/dm299_com/js/modernizr.js"></script>
+    <script type="text/javascript" src="themesmobile/dm299_com/js/jquery.js"></script>
+<body class="body_bj" style="background-color:#ffffff;">
+<script type="text/javascript" src="js/jquery.json.js"></script>
+<script>
+    //$.get("/api/okgoods.php",'','', 'JSON');
+</script>
+<style>
+    .h-left a {
+        display: block;
+        width: 45px;
+        height: 45px;
+        margin: auto;
+        background: url(../images/category/arrow_left.png) no-repeat 15px center;
+        background-size: auto 16px;
+    }
+</style>
+
+<header>
+    <div class="tab_nav" style="border-bottom:1px solid #eeeeee;">
+        <div class="header">
+            <div class="h-left"><a class="sb-back" href="javascript:history.back(-1)" title="返回"></a></div>
+            <div class="h-mid">活动规则</div>
+        </div>
+    </div>
+</header>
+
+
+<div id="tbh5v0">
+    <div class="liuyan" style="width:90%;margin:0 auto;">
+        <h4>1、如何分享</h4>
+        <span>选择喜欢的海报，长按图片选择“发送给朋友”或者“保存图片”，发送给朋友。</span>
+        <h4>2、佣金分销规则</h4>
+        <div>消费者A发展了消费者B，</div>
+        <div>消费者B发展了消费者C，</div>
+        <div>消费者C发展了消费者D。</div></br>
+
+        <div>消费者B购买了商品，消费者A可以获得奖励；</div>
+        <div>消费者C购买了商品，消费者B和A可以获得奖励；</div>
+        <div>消费者D购买了商品，消费者C和B可以获得奖励.</div>
+
+        <h4>3、奖励</h4>
+        <span>包含现金奖励、积分奖励，具体以单个商品定义为准。</span>
+
+        <h4>4、佣金发放</h4>
+        <span>消费者购买商品且“确认收货”后奖励到达推广者账号。</span>
+
+    </div>
+</div>
+
+
+</body></html>
